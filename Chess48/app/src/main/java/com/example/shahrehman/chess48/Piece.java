@@ -1,4 +1,4 @@
-package samp;
+package com.example.shahrehman.chess48;
 
 import java.io.IOException;
 

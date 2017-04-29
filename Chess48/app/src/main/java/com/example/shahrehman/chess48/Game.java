@@ -1,6 +1,5 @@
 
-package samp;
-
+package com.example.shahrehman.chess48;
 import java.io.IOException;
 /**
  * The Game class handles all games of chess
@@ -14,7 +13,9 @@ public class Game {
 	 */
     public Game() {
     }
-    
+
+
+	public String moveDetails = "";
     /**
      * This class checks if certaain pieces move is valid and then performs the move
      * @param br is the board object to be examined
@@ -33,6 +34,7 @@ public class Game {
         col1 = cor[1];
         row2 = cor[2];
         col2 = cor[3];
+
         if(row1==row2 && col1 ==col2){
         	return false;
         }
@@ -43,7 +45,7 @@ public class Game {
         if ((whiteTurn == true && color.equals("Black"))||(whiteTurn == false && color.equals("White"))){
         	return false;
         }
-        String moveDetails = br.board[row1][col1].isValid(row1, col1, row2, col2, br);
+        moveDetails = br.board[row1][col1].isValid(row1, col1, row2, col2, br);
         if (moveDetails.equals("No")){
         	return false;
         }
@@ -114,7 +116,99 @@ public class Game {
         }
         return true;
     }
-    
+
+    public boolean iValid(Board br, String cr, boolean whiteTurn) throws IOException{
+		int[] cor;
+		int row1, col1, row2, col2;
+		cor = convert(cr);
+		Piece[] tmp = new Piece[1];
+		row1 = cor[0];
+		col1 = cor[1];
+		row2 = cor[2];
+		col2 = cor[3];
+		Board copy = copyBoard(br);
+		if(row1==row2 && col1 ==col2){
+			return false;
+		}
+		else if (br.board[row1][col1].getClass().isInstance(new Empty())){
+			return false;
+		}
+		String color = br.board[row1][col1].getColor();
+		if ((whiteTurn == true && color.equals("Black"))||(whiteTurn == false && color.equals("White"))){
+			return false;
+		}
+		moveDetails = copy.board[row1][col1].isValid(row1, col1, row2, col2, br);
+		if (moveDetails.equals("No")){
+			return false;
+		}
+		if (br.board[row1][col1].getClass().isInstance(new Pawn())) {
+			if (moveDetails.equals("FreeMove")) {
+				copy = freeMove(copy, row1, col1, row2, col2, tmp, color);
+			}
+			else if(moveDetails.equals("setEpos")){
+				copy = freeMove(copy, row1, col1, row2, col2, tmp, color);
+				copy.board[row2][col2].ePos = true;
+			}
+			else if (moveDetails.equals("Epos")){
+				Epos(copy,row1,col1,row2,col2,color,tmp);
+			}
+			else if (moveDetails.equals("Kill")) {
+				copy = Kill(copy, row1,col1,row2,col2,tmp,color);
+			}
+			else if (moveDetails.equals("KP") || moveDetails.equals("Pro")){
+				copy = promotion(copy, row1,col1,row2,col2,moveDetails,color,cr);
+			}
+		}
+		else if (br.board[row1][col1].getClass().isInstance(new Rook())) {
+			if (moveDetails.equals("FreeMove")) {
+				copy = freeMove(copy, row1, col1, row2, col2, tmp, color);
+				copy.board[row2][col2].moved = true;
+			}
+			else if (moveDetails.equals("Kill")) {
+				copy = Kill(copy, row1,col1,row2,col2,tmp,color);
+				copy.board[row2][col2].moved = true;
+			}
+		}
+		else if (br.board[row1][col1].getClass().isInstance(new Bishop())) {
+			if (moveDetails.equals("FreeMove")) {
+				copy = freeMove(copy, row1, col1, row2, col2, tmp, color);
+			}
+			else if (moveDetails.equals("Kill")) {
+				copy = Kill(copy, row1,col1,row2,col2,tmp,color);
+			}
+		}
+		else if (br.board[row1][col1].getClass().isInstance(new Knight())) {
+			if (moveDetails.equals("FreeMove")) {
+				copy = freeMove(copy, row1, col1, row2, col2, tmp, color);
+			}
+			else if (moveDetails.equals("Kill")) {
+				copy = Kill(copy, row1,col1,row2,col2,tmp,color);
+			}
+		}
+		else if (br.board[row1][col1].getClass().isInstance(new Queen())) {
+			if (moveDetails.equals("FreeMove")) {
+				copy = freeMove(copy, row1, col1, row2, col2, tmp, color);
+			}
+			else if (moveDetails.equals("Kill")) {
+				copy = Kill(copy, row1,col1,row2,col2,tmp,color);
+			}
+		}
+		else if (br.board[row1][col1].getClass().isInstance(new King())) {
+			if (moveDetails.equals("FreeMove")) {
+				copy = freeMove(copy, row1, col1, row2, col2, tmp, color);
+				copy.board[row2][col2].moved= true;
+			}
+			else if (moveDetails.equals("Kill")) {
+				copy = Kill(copy, row1,col1,row2,col2,tmp,color);
+				copy.board[row2][col2].moved= true;
+			}
+			else if (moveDetails.equals("lc") ||moveDetails.equals("rc")) {
+				castling(copy,row1,col1,row2,col2,moveDetails,color,tmp);
+			}
+		}
+		return true;
+	}
+
     /**
      * This method checks if the king is in checkmate
      * @param br the board to be examined
@@ -690,6 +784,41 @@ public class Game {
         }
     	return "notInFriendlyCheck";
     }
+
+	public String friendlyTestCheck(Board br, String cdt, boolean whiteTurn) throws IOException {
+		Board copy = copyBoard(br);
+		String testCdt = "";
+		boolean result;
+		result = iValid(copy, cdt, whiteTurn);
+		if (result == false){
+			return "invalid";
+		}
+		else{
+			if(whiteTurn ==true){
+				for(int i = 0;i <copy.Black.length;i++){
+					testCdt = convertBack(copy.Black[i]) + " " +convertBack(copy.White[15]);
+					if( convertBack(copy.Black[i]).isEmpty() ||convertBack(copy.White[15]).isEmpty()){
+						continue;
+					}
+					else if(move(copy,testCdt,false)==true){
+						return "inFriendlyCheck";
+					}
+				}
+			}
+			else if(whiteTurn==false){
+				for(int i = 0;i <copy.White.length;i++){
+					testCdt = convertBack(copy.White[i]) + " " +  convertBack(copy.Black[15]);
+					if( convertBack(copy.White[i]).isEmpty() ||convertBack(copy.Black[15]).isEmpty()){
+						continue;
+					}
+					else if(move(copy,testCdt,true)==true){
+						return "inFriendlyCheck";
+					}
+				}
+			}
+		}
+		return "notInFriendlyCheck";
+	}
     
     /**
      * This method checks all pieces if they have enemy king in check
@@ -725,8 +854,48 @@ public class Game {
         }
     	return "enemyNotInCheck";
     }
-    
-    /**
+
+	public String enemyTestCheck(Board br, String coordinate, boolean whiteTurn) throws IOException {
+		Board copy = copyBoard(br);
+		String testCdt = "";
+		boolean boolMove;
+		if(whiteTurn){
+			boolMove = false;
+		}
+		else{
+			boolMove = true;
+		}
+		boolean moving = move(copy,coordinate,boolMove);
+		if(!moving){
+			return "Invalid";
+		}
+		if(whiteTurn==true){
+			for(int i = 0;i <copy.White.length;i++){
+				testCdt = convertBack(copy.White[i]) + " " +convertBack(copy.Black[15]);
+				if( convertBack(copy.White[i]).isEmpty()){
+					continue;
+				}
+				else if(move(copy,testCdt,true)==true){
+					return "enemyCheck";
+				}
+			}
+		}
+		else if(whiteTurn==false){
+			for(int i = 0;i <copy.Black.length;i++){
+				testCdt = convertBack(copy.Black[i]) + " " +  convertBack(copy.White[15]);
+				if( convertBack(copy.Black[i]).isEmpty() ||convertBack(copy.White[15]).isEmpty()){
+					continue;
+				}
+				else if(iValid(copy,testCdt,false)==true){
+					return "enemyCheck";
+				}
+			}
+		}
+		return "enemyNotInCheck";
+	}
+
+
+	/**
      * This method changes the coordinates in the array of strings to match the location of a piece
      * @param br the board to be examined
      * @param color the color of the piece

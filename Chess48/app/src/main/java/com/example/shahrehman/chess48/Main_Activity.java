@@ -5,33 +5,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 public class Main_Activity extends AppCompatActivity {
-
+    private Button newG;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.home_activity);
-        Button newGame = (Button) findViewById(R.id.newGame);
-        newGame.setOnClickListener(new View.OnClickListener() {
+        setContentView(R.layout.main_activity);
+
+        newG = (Button) findViewById(R.id.new_name);
+
+        newG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //switches scenes from this class to the other class
-                Intent intent = new Intent(view.getContext(), ChessActivity.class);
-                //carries over from the switching to a new scene
-                startActivity(intent);
+
+                launchGame();
             }
         });
-        Button replay = (Button) findViewById(R.id.replay);
-        replay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //switches scenes from this class to the other class
-                Intent intent2 = new Intent(view.getContext(), ReplayChessActivity.class);
-                //carries over from the switching to a new scene
-                startActivity(intent2);
-            }
-        });
+
+    }
+
+
+    private void launchGame() {
+
+        Intent intent = new Intent(this, ChessActivity.class);
+        startActivity(intent);
     }
 }

@@ -1,4 +1,4 @@
-package samp;
+package com.example.shahrehman.chess48;
 
 /**
  * The Empty class is inheriting piece and added to the polymorphic 2d array of type Piece as an empty spot

@@ -1,4 +1,4 @@
-package samp;
+package com.example.shahrehman.chess48;
 
 /**
  * The Board class creates 2d array of type piece which includes all of the game pieces 
@@ -8,7 +8,7 @@ package samp;
  * @White this is the string array that will hold all of white pieces coordinates
  */
 public class Board  {
-    Piece[][] board = new Piece[9][9];
+    public Piece[][] board = new Piece[9][9];
     String [] Black = new String[16];
     String [] White = new String[16];
     

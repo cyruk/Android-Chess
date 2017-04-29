@@ -15,10 +15,11 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.util.Log;
 
 import static android.R.attr.button;
-import static com.example.shahrehman.chess48.ImageAdapter.firstSelectedPosition;
-import static com.example.shahrehman.chess48.ImageAdapter.secondSelectedPosition;
+//import static com.example.shahrehman.chess48.ImageAdapter.firstSelectedPosition;
+//import static com.example.shahrehman.chess48.ImageAdapter.secondSelectedPosition;
 import static com.example.shahrehman.chess48.R.id.piece;
 
 
@@ -29,13 +30,16 @@ public class ImageAdapter extends BaseAdapter {
 
     FrameLayout flcp;
     ImageView imgvcp = null;
-
+    /*public static boolean white= true; 888888888888888888888888888888888888888
     private int whiteTurn;
     public static int firstSelectedPosition = -1;
     public static int fir = -1;
-    public static int secondSelectedPosition = -1;
+    public static int secondSelectedPosition = -1;*/
+
     //final Object data = getLastNonConfigurationInstance();
     // CHESSBOARD
+
+    private static final String TAG = "rahim";
 
     private static Integer[] chessboardIds = {
             R.drawable.white, R.drawable.brown, R.drawable.white, R.drawable.brown,
@@ -74,24 +78,124 @@ public class ImageAdapter extends BaseAdapter {
             R.drawable.whking, R.drawable.wishop, R.drawable.whknight, R.drawable.whrook,
 
     };
+    //public Integer[] chessPiece = new Integer[64];
 
-    public static void update() {
-        if (getSecond() != -1 && ImageAdapter.fir != -1 && getSecond()!=ImageAdapter.fir && ImageAdapter.chessPiece[fir]!= R.drawable.brown &&
-                ImageAdapter.chessPiece[fir]!= R.drawable.white &&
-                (ImageAdapter.chessPiece[getSecond()]==R.drawable.brown||ImageAdapter.chessPiece[getSecond()]==R.drawable.white)){
-            int tmp;
-            //tmp = ImageAdapter.chessPiece[getSecond()];
-            ImageAdapter.chessPiece[getSecond()] = ImageAdapter.chessPiece[fir];
-            ImageAdapter.chessPiece[fir] = ImageAdapter.chessboardIds[fir];
+    public ImageAdapter(Context c) {
+        mContext = c;
+        Context context = c.getApplicationContext();
+        mInflater = LayoutInflater.from(context);
+        Log.i(TAG,"Got into the construcvctor");
+        //createBoard(br);
+    }
 
-
+    public boolean isHash(int row, int col){
+        if (row == 8 || col == 8){
+            return false;
         }
+        if (row % 2 == 0){
+            if (col % 2 != 0){
+                return true;
+            }
+        }
+        else if (row % 2 != 0){
+            if (col % 2 == 0){
+                return true;
+            }
+        }
+        return false;
+    }
 
+    public static void update(Board br, int first, int second, String specs) {
+
+        Log.i(TAG,"starrting to update");
+     /*      if(specs.equals("Epos")){
+                if(first-second>0){
+                    ImageAdapter.chessPiece[second+8] = ImageAdapter.chessboardIds[second+8];
+                }
+                else{
+                    ImageAdapter.chessPiece[second-8] = ImageAdapter.chessboardIds[second-8];
+                }
+            }
+            ImageAdapter.chessPiece[second] = chessPiece[first];
+            //ImageAdapter.chessPiece[second] = R.drawable.blpawn;
+            ImageAdapter.chessPiece[first] = ImageAdapter.chessboardIds[first];*/
+
+
+
+        int x=0;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                //x = (i*8)+j;
+                if (br.board[i][j].getClass().isInstance(new Pawn())) {
+                    if (br.board[i][j].color.equals("White")) {
+                        ImageAdapter.chessPiece[x] = R.drawable.whpawn;
+                        //ImageAdapter.chessPiece[x] = ImageAdapter.chessPiece;
+                    }
+                    else {
+                        ImageAdapter.chessPiece[x] = R.drawable.blpawn;
+                    }
+                }
+                else if (br.board[i][j].getClass().isInstance(new Rook())) {
+                    if (br.board[i][j].color.equals("White")) {
+                        ImageAdapter.chessPiece[x] = R.drawable.whrook;
+                    }
+                    else {
+                        ImageAdapter.chessPiece[x] = R.drawable.blrook;
+                    }
+                }
+                else if (br.board[i][j].getClass().isInstance(new Knight())) {
+                    if (br.board[i][j].color.equals("White")) {
+                        ImageAdapter.chessPiece[x] = R.drawable.whknight;
+                    }
+                    else {
+                        ImageAdapter.chessPiece[x] = R.drawable.blknight;
+                    }
+                }
+                else if (br.board[i][j].getClass().isInstance(new Bishop())) {
+                    if (br.board[i][j].color.equals("White")) {
+                        ImageAdapter.chessPiece[x] = R.drawable.wishop;
+                    }
+                    else {
+                        ImageAdapter.chessPiece[x] = R.drawable.bishop;
+                    }
+                }
+                else if (br.board[i][j].getClass().isInstance(new King())) {
+                    if (br.board[i][j].color.equals("White")) {
+                        ImageAdapter.chessPiece[x] = R.drawable.whking;
+                    }
+                    else {
+                        ImageAdapter.chessPiece[x] = R.drawable.blking;
+                    }
+                }
+                else if (br.board[i][j].getClass().isInstance(new Queen())) {
+                    if (br.board[i][j].color.equals("White")) {
+                        ImageAdapter.chessPiece[x] = R.drawable.whqueen;
+                    }
+                    else {
+                        ImageAdapter.chessPiece[x] = R.drawable.blqueen;
+                    }
+                }
+                else {
+                    ImageAdapter.chessPiece[x] = ImageAdapter.chessboardIds[x];
+                }
+                x++;
+            }
+        }
     }
 
 
-    //android:background="#FFFFFF"
-    //android:background="#00000000"
+
+
+
+
+    /*public static boolean isBlack(){ 8888888888888888888888888888888888888
+        if(chessPiece[fir]==R.drawable.blqueen||chessPiece[fir]==R.drawable.blrook||chessPiece[fir]==R.drawable.blknight||
+                chessPiece[fir]==R.drawable.bishop||chessPiece[fir]==R.drawable.blking||chessPiece[fir]==R.drawable.blpawn){
+            return true;
+        }
+        return false;
+    }*/
+
     static class ViewHolder {
         public ImageView square;
         public ImageView piece;
@@ -101,19 +205,14 @@ public class ImageAdapter extends BaseAdapter {
         return mContext;
     }
 
-    public ImageAdapter(Context c/*, Piece[] listPiece, int turn*/) {
-        mContext = c;
-        Context context = c.getApplicationContext();
-        mInflater = LayoutInflater.from(context);
-    }
 
-    public static void setFirstSelectedPosition(int position) {
+    /*public static void setFirstSelectedPosition(int position) { 888888888888888888888888888
         firstSelectedPosition = position;
     }
 
     public static void setSecondSelectedPosition(int position) {
         secondSelectedPosition = position;
-    }
+    }*/
 
     @Override
     public int getCount() {
@@ -130,13 +229,13 @@ public class ImageAdapter extends BaseAdapter {
         return 0;
     }
 
-    public static int getFirst(){
+   /* public static int getFirst(){ 888888888888888888888888888888888888888888
         return firstSelectedPosition;
     }
 
     public static int getSecond(){
         return secondSelectedPosition;
-    }
+    }*/
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -157,39 +256,6 @@ public class ImageAdapter extends BaseAdapter {
             rowView.setTag(viewHolder);
 
         }
-
-        /*View.OnLongClickListener cl = new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                ClipData cd = ClipData.newPlainText("","");
-                View.DragShadowBuilder shadow = new View.DragShadowBuilder(v);
-                v.startDrag(cd,shadow,v,0);
-                return false;
-            }
-        };
-
-        View.OnDragListener oragListener = new View.OnDragListener(){
-            @Override
-            public  boolean onDrag(View v, DragEvent event){
-                int dragEvent = event.getAction();
-
-                switch(dragEvent){
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                        final View view = (View) event.getLocalState();
-                        if(view.getId()== R.id.piece){
-
-                        }
-                        break;
-                    case DragEvent.ACTION_DRAG_EXITED:
-                        break;
-                    case DragEvent.ACTION_DROP:
-                        break;
-                }
-                return true;
-            }
-        };*/
-
-
         return rowView;
     }
 }
