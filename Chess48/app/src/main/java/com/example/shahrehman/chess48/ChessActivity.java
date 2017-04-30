@@ -1,5 +1,6 @@
 package com.example.shahrehman.chess48;
 
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,15 +21,17 @@ public class ChessActivity extends AppCompatActivity {
     private static final String TAG = "rahimMessage";
     GridView chessGrid;
 /*9999999999999999999999999999999999999999*/
-    public static boolean whiteTurn= true;
+    public  boolean whiteTurn= true;
     //private int whiteTurn;
-    public static int firstSelectedPosition = -1;
-    public static int fir = -1;
-    public static int secondSelectedPosition = -1;
+    public int firstSelectedPosition = -1;
+    public int fir = -1;
+    public int secondSelectedPosition = -1;
     public boolean checkMate=false;
     public boolean check = false;
     public boolean moving;
     TextView turn;
+    Board br = new Board();
+    Game game = new Game();
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -41,8 +44,8 @@ public class ChessActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chess_activity);
         //Log.i(TAG,"" + "First " + ImageAdapter.getFirst() + " Fir " + ImageAdapter.fir + " Second " + ImageAdapter.getSecond());
-        final Board br = new Board();
-        final Game game = new Game();
+        //final Board br = new Board();
+        //final Game game = new Game();
         ImageAdapter im = new ImageAdapter(this);
         //im.createBoard(br);
         chessGrid = (GridView) findViewById(R.id.chessBoard);
@@ -81,29 +84,30 @@ public class ChessActivity extends AppCompatActivity {
                                 Log.i(TAG,"Friendcheck stilll there");
                                 Toast.makeText(ChessActivity.this, convertBoolean(whiteTurn) + " is still in Check!",
                                         Toast.LENGTH_SHORT).show();
-                                //white = changeTurn(white);
                                 moving = false;
                             }
-                            /*else if(game.enemyTestCheck(br,coordinate,changeTurn(whiteTurn)).equals("notInFriendlyCheck")){
-                                Log.i(TAG,"Check is gone valid move");
-                                check = false;
-                                //moving = true;
-                            }*/
                             else{
                                 check = false;
                             }
-
-
                         }
+
                         if(!check && !checkMate){
-                            moving = game.move(br,coordinate,whiteTurn);
-                            moveDetails = game.moveDetails;
+                            if(game.enemyTestCheck(br,coordinate,changeTurn(whiteTurn)).equals("enemyCheck")) {
+                                Log.i(TAG, "Friendly check in there");
+                                Toast.makeText(ChessActivity.this, convertBoolean(whiteTurn) + " Kinng is in check fool!!",
+                                        Toast.LENGTH_SHORT).show();
+                                moving = false;
+                            }
+                            else {
+                                moving = game.move(br, coordinate, whiteTurn);
+                                moveDetails = game.moveDetails;
+                            }
                         }
 
                         if(moving!=true) {
                             Toast.makeText(ChessActivity.this, "Move is invalid",
                                     Toast.LENGTH_SHORT).show();
-                            //ImageAdapter.update(br);
+
                         }
                         else {
 
@@ -113,6 +117,13 @@ public class ChessActivity extends AppCompatActivity {
                                 checkMate = true;
                                 ImageAdapter.update(br,fir, secondSelectedPosition, moveDetails);
                                 whiteTurn=changeTurn(whiteTurn);
+                                br.writeApp(br);
+                            }
+                            else if(game.enemyTestCheck(br,coordinate,changeTurn(whiteTurn)).equals("enemyCheck")){
+                                Log.i(TAG,"Friendly check in there");
+                                Toast.makeText(ChessActivity.this, convertBoolean(whiteTurn) + " Kinng is in check fool!!",
+                                        Toast.LENGTH_SHORT).show();
+
                             }
                             else if (game.enemyCheck(br, whiteTurn).equals("enemyCheck")) {
                                 ImageAdapter.update(br,fir, secondSelectedPosition, "enemyCheck");
@@ -120,14 +131,17 @@ public class ChessActivity extends AppCompatActivity {
                                         Toast.LENGTH_SHORT).show();
                                 check = true;
                                 whiteTurn=changeTurn(whiteTurn);
+                                br.writeApp(br);
                             }
                             else {
 
                                 ImageAdapter.update(br,fir, secondSelectedPosition, moveDetails);
                                 whiteTurn=changeTurn(whiteTurn);
+                                br.writeApp(br);
                             }
-                            resetEpos(br,whiteTurn);
+                            resetEpos(br,changeTurn(whiteTurn));
                             Log.i(TAG,"turn: " + whiteTurn);
+                            br.toString();
                             //white=changeTurn(white);
 
                         }
@@ -138,54 +152,62 @@ public class ChessActivity extends AppCompatActivity {
                     chessGrid.setAdapter(new ImageAdapter(ImageAdapter.getContext()));
                     firstSelectedPosition=-1;
                 }
-                //Log.i(TAG,"" + "First " + ImageAdapter.getFirst() + " Fir " + ImageAdapter.fir + " Second " + ImageAdapter.getSecond());
-                /*Toast.makeText(ChessActivity.this, "" + position,
-                        Toast.LENGTH_SHORT).show();*/
-
-
             }
 
         });
 
-
     }
-    public void prin(Board br){
-
-        /*for(int i = 0;i<9;i++){
-            for(int j = 0;j<9;j++){
-                if(br.board[i][j].getClass().isInstance(new Empty()) && i!=8) {
-                    if(isHash(i,j))
-                        br.board[i][j].setName("##");
-                    else if(isHash(i,j)==false &&isNumOrLetter(br.board[i][j].getName())==false) {
-                        br.board[i][j].setName("");
-                    }
-                    System.out.printf("%-3s", br.board[i][j].getName());
-                    Log.i(TAG, br.board[i][j].getName());
+    @Override
+    public void onBackPressed() {
+        //br.writeApp(br);
+        for(int i = 0; i<64;i++){
+            if(i<8){
+                if(i ==0 ||i == 7){
+                    ImageAdapter.chessPiece[i] = R.drawable.blrook;
                 }
-                else if(i == 8){
-                    System.out.print(" " +br.board[i][j].getName() + " ");
-                    Log.i(TAG," "+ br.board[i][j].getName() + " ");
+                else if(i ==1 ||i ==6){
+                    ImageAdapter.chessPiece[i] = R.drawable.blknight;
                 }
-                else {
-                    System.out.print(br.board[i][j].getName() + " ");
-                    Log.i(TAG, br.board[i][j].getName() + " ");
+                else if(i ==2 ||i ==5){
+                    ImageAdapter.chessPiece[i] = R.drawable.bishop;
+                }
+                else if(i ==3){
+                    ImageAdapter.chessPiece[i] = R.drawable.blqueen;
+                }
+                else if(i==4){
+                    ImageAdapter.chessPiece[i] = R.drawable.blking;
                 }
             }
-            System.out.println();
-            Log.i(TAG, " ");
-        }*/
-        //return "";
-
-        /*String[][] arr = new String[9][9];
-        for(int i = 0;i<9;i++){
-            for(int j = 0;j<9;j++){
-                if(br.board[j][i].getClass().isInstance(new Empty()) && i!=8) {
-                    if(isHash(i,j)) {
-                        //br.board[i][j].setName("##");
-                        arr[]
-                    }
+            else if(i>7&&i<16) {
+                ImageAdapter.chessPiece[i] = R.drawable.blpawn;
             }
-        }*/
+            else if(i>15 && i<48){
+                ImageAdapter.chessPiece[i] = ImageAdapter.chessboardIds[i];
+            }
+            else if(i>47 && i<56){
+                ImageAdapter.chessPiece[i] = R.drawable.whpawn;
+            }
+            else if(i>55){
+                if(i ==56 ||i == 63){
+                    ImageAdapter.chessPiece[i] = R.drawable.whrook;
+                }
+                else if(i ==57 ||i ==62){
+                    ImageAdapter.chessPiece[i] = R.drawable.whknight;
+                }
+                else if(i ==58 ||i ==61){
+                    ImageAdapter.chessPiece[i] = R.drawable.wishop;
+                }
+                else if(i ==59){
+                    ImageAdapter.chessPiece[i] = R.drawable.whqueen;
+                }
+                else if(i==60){
+                    ImageAdapter.chessPiece[i] = R.drawable.whking;
+                }
+            }
+
+        }
+        Intent intent = new Intent(this, Main_Activity.class);
+        startActivity(intent);
     }
 
     public boolean isHash(int row, int col){

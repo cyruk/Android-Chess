@@ -114,6 +114,7 @@ public class Game {
                 castling(br,row1,col1,row2,col2,moveDetails,color,tmp);
             }
         }
+
         return true;
     }
 
@@ -232,7 +233,9 @@ public class Game {
     	int cantSaveKing = 0;
     	int killerIndex = 0;
     	String blockCoordinate = "";
-    	//if piece that moves is white, seeing if black king is in check
+		boolean block;
+
+		//if piece that moves is white, seeing if black king is in check
         if(turn==true){
         	//getting coordinates of of the black king
         	kRow = Character.getNumericValue(br.Black[15].charAt(0));
@@ -359,7 +362,8 @@ public class Game {
         		}
         	}
         	blockCoordinate = pieceKInCheck[0] + " " + convertBack(br.Black[15]);
-        	if(cantSaveKing == 15&& kMoveCounter == 8&& blockLineOfSight(br,blockCoordinate,killerIndex,"Black" )==false){
+        	block = blockLineOfSight(br,blockCoordinate,killerIndex,"Black" );
+			if(cantSaveKing == 15&& kMoveCounter == 8&& block==false){
         		return true;
         	}
         }
@@ -399,7 +403,8 @@ public class Game {
         		}
         	}
         	blockCoordinate = pieceKInCheck[0] + " " + convertBack(br.White[15]);
-        	if(cantSaveKing == 15&& kMoveCounter == 8&& blockLineOfSight(br,blockCoordinate,killerIndex,"White" )==false){
+        	block = blockLineOfSight(br,blockCoordinate,killerIndex,"White" );
+			if(cantSaveKing == 15&& kMoveCounter == 8&& blockLineOfSight(br,blockCoordinate,killerIndex,"White" )==false){
         		return true;
         	}
         }
@@ -610,8 +615,8 @@ public class Game {
 				for(int i = pRow-1;i<kRow;i--){
 					for(int j = 0;j<15;j++){
 						blockDestination = "" + i + pCol;
-						blockCoordinate = convertBack(copy.White[j]) + " " + convertBack(blockDestination);
-						if(convertBack(copy.White[j]).isEmpty()){
+						blockCoordinate = convertBack(copy.Black[j]) + " " + convertBack(blockDestination);
+						if(convertBack(copy.Black[j]).isEmpty()){
 							continue;
 						}
 						else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
@@ -625,8 +630,8 @@ public class Game {
 				for(int i = pRow+1;i>kRow;i++){
 					for(int j = 0;j<15;j++){
 						blockDestination = "" + i + pCol;
-						blockCoordinate = convertBack(copy.White[j]) + " " + convertBack(blockDestination);
-						if(convertBack(copy.White[j]).isEmpty()){
+						blockCoordinate = convertBack(copy.Black[j]) + " " + convertBack(blockDestination);
+						if(convertBack(copy.Black[j]).isEmpty()){
 							continue;
 						}
 						else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
@@ -640,8 +645,8 @@ public class Game {
 				for(int i = pCol+1;i<kCol;i++){
 					for(int j = 0;j<15;j++){
 						blockDestination = "" + pRow + i;
-						blockCoordinate = convertBack(copy.White[j]) + " " + convertBack(blockDestination);
-						if(convertBack(copy.White[j]).isEmpty()){
+						blockCoordinate = convertBack(copy.Black[j]) + " " + convertBack(blockDestination);
+						if(convertBack(copy.Black[j]).isEmpty()){
 							continue;
 						}
 						else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
@@ -655,8 +660,8 @@ public class Game {
 				for(int i = pCol-1;i>kCol;i--){
 					for(int j = 0;j<15;j++){
 						blockDestination = "" + pRow + i;
-						blockCoordinate = convertBack(copy.White[j]) + " " + convertBack(blockDestination);
-						if(convertBack(copy.White[j]).isEmpty()){
+						blockCoordinate = convertBack(copy.Black[j]) + " " + convertBack(blockDestination);
+						if(convertBack(copy.Black[j]).isEmpty()){
 							continue;
 						}
 						else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
@@ -671,8 +676,8 @@ public class Game {
 	                for(int j = pCol+1;j<kCol;j++){
 	                	for(int k = 0;k<15;k++){
 	                		blockDestination = "" + i + j;
-							blockCoordinate = convertBack(copy.White[k]) + " " + convertBack(blockDestination);
-							if(convertBack(copy.White[k]).isEmpty()){
+							blockCoordinate = convertBack(copy.Black[k]) + " " + convertBack(blockDestination);
+							if(convertBack(copy.Black[k]).isEmpty()){
 								continue;
 							}
 							else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
@@ -689,8 +694,8 @@ public class Game {
 	                for(int j = pCol-1;j>kCol;j--){
 	                	for(int k = 0;k<15;k++){
 	                		blockDestination = "" + i + j;
-							blockCoordinate = convertBack(copy.White[k]) + " " + convertBack(blockDestination);
-							if(convertBack(copy.White[k]).isEmpty()){
+							blockCoordinate = convertBack(copy.Black[k]) + " " + convertBack(blockDestination);
+							if(convertBack(copy.Black[k]).isEmpty()){
 								continue;
 							}
 							else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
@@ -707,8 +712,8 @@ public class Game {
 	                for(int j = pCol+1;j<kCol;j++){
 	                	for(int k = 0;k<15;k++){
 	                		blockDestination = "" + i + j;
-							blockCoordinate = convertBack(copy.White[k]) + " " + convertBack(blockDestination);
-							if(convertBack(copy.White[k]).isEmpty()){
+							blockCoordinate = convertBack(copy.Black[k]) + " " + convertBack(blockDestination);
+							if(convertBack(copy.Black[k]).isEmpty()){
 								continue;
 							}
 							else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
@@ -725,8 +730,8 @@ public class Game {
 	                for(int j = pCol-1;j>kCol;j--){
 	                	for(int k = 0;k<15;k++){
 	                		blockDestination = "" + i + j;
-							blockCoordinate = convertBack(copy.White[k]) + " " + convertBack(blockDestination);
-							if(convertBack(copy.White[k]).isEmpty()){
+							blockCoordinate = convertBack(copy.Black[k]) + " " + convertBack(blockDestination);
+							if(convertBack(copy.Black[k]).isEmpty()){
 								continue;
 							}
 							else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){

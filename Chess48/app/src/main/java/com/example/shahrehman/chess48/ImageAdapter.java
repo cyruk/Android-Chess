@@ -41,7 +41,7 @@ public class ImageAdapter extends BaseAdapter {
 
     private static final String TAG = "rahim";
 
-    private static Integer[] chessboardIds = {
+    public static Integer[] chessboardIds = {
             R.drawable.white, R.drawable.brown, R.drawable.white, R.drawable.brown,
             R.drawable.white, R.drawable.brown, R.drawable.white, R.drawable.brown,
             R.drawable.brown, R.drawable.white, R.drawable.brown, R.drawable.white,
@@ -127,7 +127,7 @@ public class ImageAdapter extends BaseAdapter {
             for (int j = 0; j < 8; j++) {
                 //x = (i*8)+j;
                 if (br.board[i][j].getClass().isInstance(new Pawn())) {
-                    if (br.board[i][j].color.equals("White")) {
+                    if (br.board[i][j].getColor().equals("White")) {
                         ImageAdapter.chessPiece[x] = R.drawable.whpawn;
                         //ImageAdapter.chessPiece[x] = ImageAdapter.chessPiece;
                     }
@@ -136,7 +136,7 @@ public class ImageAdapter extends BaseAdapter {
                     }
                 }
                 else if (br.board[i][j].getClass().isInstance(new Rook())) {
-                    if (br.board[i][j].color.equals("White")) {
+                    if (br.board[i][j].getColor().equals("White")) {
                         ImageAdapter.chessPiece[x] = R.drawable.whrook;
                     }
                     else {
@@ -144,7 +144,7 @@ public class ImageAdapter extends BaseAdapter {
                     }
                 }
                 else if (br.board[i][j].getClass().isInstance(new Knight())) {
-                    if (br.board[i][j].color.equals("White")) {
+                    if (br.board[i][j].getColor().equals("White")) {
                         ImageAdapter.chessPiece[x] = R.drawable.whknight;
                     }
                     else {
@@ -152,7 +152,7 @@ public class ImageAdapter extends BaseAdapter {
                     }
                 }
                 else if (br.board[i][j].getClass().isInstance(new Bishop())) {
-                    if (br.board[i][j].color.equals("White")) {
+                    if (br.board[i][j].getColor().equals("White")) {
                         ImageAdapter.chessPiece[x] = R.drawable.wishop;
                     }
                     else {
@@ -160,7 +160,7 @@ public class ImageAdapter extends BaseAdapter {
                     }
                 }
                 else if (br.board[i][j].getClass().isInstance(new King())) {
-                    if (br.board[i][j].color.equals("White")) {
+                    if (br.board[i][j].getColor().equals("White")) {
                         ImageAdapter.chessPiece[x] = R.drawable.whking;
                     }
                     else {
@@ -168,7 +168,7 @@ public class ImageAdapter extends BaseAdapter {
                     }
                 }
                 else if (br.board[i][j].getClass().isInstance(new Queen())) {
-                    if (br.board[i][j].color.equals("White")) {
+                    if (br.board[i][j].getColor().equals("White")) {
                         ImageAdapter.chessPiece[x] = R.drawable.whqueen;
                     }
                     else {
