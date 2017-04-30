@@ -16,7 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ChessActivity"></activity>
+        <activity android:name=".Chess_Activity"></activity>
+        <activity android:name=".Replay_Activity"></activity>
     </application>
 
 </manifest>

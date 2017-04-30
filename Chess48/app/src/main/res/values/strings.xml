@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Chess48</string>
+    <string name="chess">Chess</string>
     <string name="newGame">New Game</string>
     <string name="viewGame">View Games</string>
-    <string name="home">Chess</string>
-    <string name="newG">New Game</string>
+    <string name="returnM">Return</string>
+    <string name="playG">Play Game</string>
 </resources>

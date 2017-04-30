@@ -58,7 +58,7 @@ public class King extends Piece {
         ////moving two spots to the left or right
         else if(col1-col2 == 2){
             //king has already moved
-            if(br.board[row1][col1].moved==true){
+            if(br.board[row1][col1].getMoved()==true){
                 return "No";
             }
             //moving towards the left and pieces in the way?
@@ -71,7 +71,7 @@ public class King extends Piece {
             // moving to the left and path is clear... is there a rook for castling?
             else if(br.board[row1][col1-4].getClass().isInstance(new Rook())){
                 //has the rook already moved??
-                if(br.board[row1][col1-4].moved==true) {
+                if(br.board[row1][col1-4].getMoved()==true) {
                     return "No";
                 }
                 //valid left castling
@@ -83,7 +83,7 @@ public class King extends Piece {
         else if(col2-col1 ==2){
             //king has already moved
         	//System.out.println(br.board[row1][col1].moved);
-            if(br.board[row1][col1].moved==true){
+            if(br.board[row1][col1].getMoved()==true){
                 return "No";
             }
             //moving towards the right and pieces in the way?
@@ -93,7 +93,7 @@ public class King extends Piece {
             }
             else if(br.board[row1][col1+3].getClass().isInstance(new Rook())){
                 //has the rook already moved??
-                if(br.board[row1][col1+3].moved==true) {
+                if(br.board[row1][col1+3].getMoved()==true) {
                     return "No";
                 }
                 //valid right castling
@@ -172,4 +172,14 @@ public class King extends Piece {
     public int getId(){
         return id;
     }
+
+
+    public boolean getMoved(){
+        return moved;
+    }
+
+    public void setMoved(boolean hasMoved){
+        moved = hasMoved;
+    }
+
 }

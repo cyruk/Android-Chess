@@ -154,24 +154,6 @@ public class Board  {
         return false;
     }
 
-    public static void writeApp(Board boardApp) throws IOException {
-        File root = new File("hi.dat");
-        FileOutputStream fos = new FileOutputStream(root);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(boardApp);
-        fos.close();
-        oos.close();
-    }
-
-    public static Board readApp() throws IOException, ClassNotFoundException {
-        File root = new File("hi.dat");
-        FileInputStream fis = new FileInputStream(root);
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        Board readBoard = (Board)ois.readObject();
-        fis.close();
-        ois.close();
-        return readBoard;
-    }
 
 
 }

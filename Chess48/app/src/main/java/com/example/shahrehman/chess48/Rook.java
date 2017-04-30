@@ -138,4 +138,13 @@ public class Rook extends Piece {
     public int getId(){
         return id;
     }
+
+
+    public boolean getMoved(){
+        return moved;
+    }
+
+    public void setMoved(boolean hasMoved){
+        moved = hasMoved;
+    }
 }

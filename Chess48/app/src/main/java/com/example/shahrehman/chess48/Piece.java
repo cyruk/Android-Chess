@@ -71,4 +71,10 @@ public class Piece{
     	String[] arr = new String[0];
     	return arr;
     }
+
+    public void setMoved(boolean hasMoved){}
+
+    public boolean getMoved(){
+        return moved;
+    }
 }
