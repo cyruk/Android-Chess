@@ -25,7 +25,7 @@ public class Game {
      * @throws IOException
      * @throws NullPointerException
      */
-    public boolean move(Board br, String cr, boolean whiteTurn) throws IOException, NullPointerException {
+    public boolean move(Board br, String cr, boolean whiteTurn, String pro) throws IOException, NullPointerException {
         int[] cor;
         int row1, col1, row2, col2;
         cor = convert(cr);
@@ -430,7 +430,7 @@ public class Game {
        		if( convertBack(copy.White[i]).isEmpty() ||convertBack(copy.Black[15]).isEmpty()){
        			return false;
        		}
-       		else if(move(copy,testCdt,true)==true){
+       		else if(move(copy,testCdt,true, "")==true){
        			return true;
        		}
        		
@@ -440,7 +440,7 @@ public class Game {
         	if( convertBack(copy.Black[i]).isEmpty() ||convertBack(copy.White[15]).isEmpty()){
         		return false;
         	}
-        	else if(move(copy,testCdt,false)==true){
+        	else if(move(copy,testCdt,false,"")==true){
         		return true;
         	}
         		
@@ -759,7 +759,7 @@ public class Game {
     	Board copy = copyBoard(br);
     	String testCdt = "";
     	boolean result;
-    	result = move(copy, cdt, whiteTurn);
+    	result = move(copy, cdt, whiteTurn,"");
         if (result == false){
         	return "invalid";
         }
@@ -770,7 +770,7 @@ public class Game {
         			if( convertBack(copy.Black[i]).isEmpty() ||convertBack(copy.White[15]).isEmpty()){
         				continue;
         			}
-        			else if(move(copy,testCdt,false)==true){
+        			else if(move(copy,testCdt,false,"")==true){
         				return "inFriendlyCheck";
         			}
         		}	
@@ -781,7 +781,7 @@ public class Game {
         			if( convertBack(copy.White[i]).isEmpty() ||convertBack(copy.Black[15]).isEmpty()){
         				continue;
         			}
-        			else if(move(copy,testCdt,true)==true){
+        			else if(move(copy,testCdt,true,"")==true){
         				return "inFriendlyCheck";
         			}
         		}	
@@ -805,7 +805,7 @@ public class Game {
 					if( convertBack(copy.Black[i]).isEmpty() ||convertBack(copy.White[15]).isEmpty()){
 						continue;
 					}
-					else if(move(copy,testCdt,false)==true){
+					else if(move(copy,testCdt,false,"")==true){
 						return "inFriendlyCheck";
 					}
 				}
@@ -816,7 +816,7 @@ public class Game {
 					if( convertBack(copy.White[i]).isEmpty() ||convertBack(copy.Black[15]).isEmpty()){
 						continue;
 					}
-					else if(move(copy,testCdt,true)==true){
+					else if(move(copy,testCdt,true,"")==true){
 						return "inFriendlyCheck";
 					}
 				}
@@ -841,7 +841,7 @@ public class Game {
         		if( convertBack(copy.White[i]).isEmpty() ||convertBack(copy.Black[15]).isEmpty()){
         			continue;
         		}
-        		else if(move(copy,testCdt,true)==true){
+        		else if(move(copy,testCdt,true,"")==true){
         			return "enemyCheck";
         		}
         	}	
@@ -852,7 +852,7 @@ public class Game {
         		if( convertBack(copy.Black[i]).isEmpty() ||convertBack(copy.White[15]).isEmpty()){
         			continue;
         		}
-        		else if(move(copy,testCdt,false)==true){
+        		else if(move(copy,testCdt,false,"")==true){
         			return "enemyCheck";
         		}
         	}	
@@ -861,34 +861,14 @@ public class Game {
     }
 
 	public String friendCheck(Board br, String coordinate, boolean whiteTurn) throws IOException {
-		Board copy = copyBoard(br);
+		Board copy = br;
 		String testCdt = "";
 		boolean boolMove;
-		boolean kingM=false, rook1M=false,rook2M=false;
-		int[] king = new int[2];
-		int[] rook1 = new int[2];
-		int[] rook2 = new int[2];
-		if(whiteTurn==true){
-			king = getCoordinate(br.White[15]);
-			kingM = br.board[king[0]][king[1]].getMoved();
-			rook1 = getCoordinate(br.White[8]);
-			rook1M = br.board[king[0]][king[1]].getMoved();
-			rook2 = getCoordinate(br.White[9]);
-			rook2M = br.board[king[0]][king[1]].getMoved();
-		}
-		else if(whiteTurn==false){
-			king = getCoordinate(br.Black[15]);
-			kingM = br.board[king[0]][king[1]].getMoved();
-			rook1 = getCoordinate(br.Black[8]);
-			rook1M = br.board[king[0]][king[1]].getMoved();
-			rook2 = getCoordinate(br.Black[9]);
-			rook2M = br.board[king[0]][king[1]].getMoved();
-		}
 
 
 
 
-		boolean moving = move(copy,coordinate,whiteTurn);
+		boolean moving = move(copy,coordinate,whiteTurn,"");
 		if(!moving){
 			return "Invalid";
 		}
@@ -898,7 +878,7 @@ public class Game {
 				if( convertBack(copy.White[i]).isEmpty()){
 					continue;
 				}
-				else if(move(copy,testCdt,true)==true){
+				else if(move(copy,testCdt,true,"")==true){
 					return "friendCheck";
 				}
 			}
@@ -914,24 +894,7 @@ public class Game {
 				}
 			}
 		}
-		if(whiteTurn == true) {
-			king = getCoordinate(br.White[15]);
-			br.board[king[0]][king[1]].setMoved(kingM);
-			rook1 = getCoordinate(br.White[8]);
-			br.board[rook1[0]][rook1[1]].setMoved(rook1M);
-			rook2 = getCoordinate(br.White[9]);
-			br.board[rook2[0]][rook2[1]].setMoved(rook2M);
 
-		}
-		else if(whiteTurn == false) {
-			king = getCoordinate(br.Black[15]);
-			br.board[king[0]][king[1]].setMoved(kingM);
-			rook1 = getCoordinate(br.Black[8]);
-			br.board[rook1[0]][rook1[1]].setMoved(rook1M);
-			rook2 = getCoordinate(br.Black[9]);
-			br.board[rook2[0]][rook2[1]].setMoved(rook2M);
-
-		}
 		return "notInFriendCheck";
 	}
 

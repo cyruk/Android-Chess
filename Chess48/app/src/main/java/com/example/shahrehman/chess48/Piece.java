@@ -1,6 +1,7 @@
 package com.example.shahrehman.chess48;
 
 import java.io.IOException;
+import java.io.PushbackInputStream;
 
 /**
  * The Piece Class is the superclass which will be inherited by the chess game pieces
@@ -40,7 +41,9 @@ public class Piece{
     public String getName(){
         return name;
     }
-    
+
+    //public Piece(Piece p){}
+    public Piece(){}
     /**
      * This method is used to get the color of a piece
      * @return returns a string for the color of a certain piece
@@ -76,5 +79,9 @@ public class Piece{
 
     public boolean getMoved(){
         return moved;
+    }
+
+    public boolean ePos(){
+        return ePos;
     }
 }

@@ -26,6 +26,12 @@ public class Queen extends Piece {
         this.name = name;
         this.id = id;
     }
+
+    public Queen(Piece q){
+        this.color = q.getColor();
+        this.name = q.getName();
+        this.id = q.getId();
+    }
     
     /**
      * No arg constructor

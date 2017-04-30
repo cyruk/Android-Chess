@@ -88,6 +88,42 @@ public class Board  {
             x++;
         }
     }
+
+    public Board(Board br){
+        System.out.println("Copy");
+
+        int i,j;
+        for(i =0;i<9;i++){
+            for(j=0;j<9;j++){
+                if(br.board[i][j].getClass().isInstance(new Pawn())){
+                    //Pawn p = new Pawn(br);
+                    this.board[i][j] = new Pawn(br.board[i][j]);
+                }
+                else if(br.board[i][j].getClass().isInstance(new Rook())){
+                    this.board[i][j] = new Rook(br.board[i][j]);
+                }
+                else if(br.board[i][j].getClass().isInstance(new Knight())){
+                    this.board[i][j] = new Knight(br.board[i][j]);
+                }
+                else if(br.board[i][j].getClass().isInstance(new Queen())){
+                    this.board[i][j] = new Queen(br.board[i][j]);
+                }
+                else if(br.board[i][j].getClass().isInstance(new Bishop())){
+                    this.board[i][j] = new Bishop(br.board[i][j]);
+                }
+                else if(br.board[i][j].getClass().isInstance(new King())){
+                    this.board[i][j] = new King(br.board[i][j]);
+                }
+                else if(br.board[i][j].getClass().isInstance(new Empty())){
+                    this.board[i][j] = new Empty(br.board[i][j]);
+                }
+            }
+        }
+        for(int x = 0;x<16;x++){
+            this.White[x] = br.White[x];
+            this.Black[x] = br.Black[x];
+        }
+    }
     
     /**
      * The to String method prints out the board during play

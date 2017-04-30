@@ -26,6 +26,13 @@ public class Rook extends Piece {
         moved = false;
         this.id = id;
     }
+
+    public Rook(Piece r){
+        this.color = r.getColor();
+        this.name = r.getName();
+        this.moved = r.getMoved();
+        this.id = r.getId();
+    }
     /**
      * No arg constructor
      */

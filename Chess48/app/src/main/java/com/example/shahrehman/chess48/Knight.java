@@ -24,7 +24,14 @@ public class Knight extends Piece {
         this.name = name;
         this.id = id;
     }
-    
+
+    public Knight(Piece kn){
+        this.color = kn.getColor();
+        this.name = kn.getName();
+        this.id = kn.getId();
+    }
+
+
     /**
      * No arg constructor
      */

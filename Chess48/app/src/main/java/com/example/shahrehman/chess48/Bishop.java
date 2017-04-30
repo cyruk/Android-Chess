@@ -25,7 +25,15 @@ public class Bishop extends Piece {
         this.id = id;
 
     }
-    
+    public Bishop(Piece b){
+        this.color = b.getColor();
+        this.name = b.getName();
+        this.id = b.getId();
+
+    }
+
+
+
     /**
      * No arg constructor
      */

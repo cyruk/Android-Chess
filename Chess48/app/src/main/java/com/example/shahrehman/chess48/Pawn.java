@@ -25,6 +25,13 @@ public class Pawn extends Piece {
         ePos = false;
         this.id = id;
     }
+
+    public Pawn(Piece p){
+        this.color = p.getColor();
+        this.name = p.getName();
+        this.ePos = p.ePos;
+        this.id = p.getId();
+    }
     
     /**
      * The no arg constructor for pawn
@@ -185,5 +192,9 @@ public class Pawn extends Piece {
      */
     public int getId(){
         return id;
+    }
+
+    public boolean ePos(){
+        return ePos;
     }
 }

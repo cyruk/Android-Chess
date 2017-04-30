@@ -5,14 +5,18 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.graphics.Color;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.view.MenuItem;
+import android.widget.PopupMenu;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -35,9 +39,11 @@ public class Chess_Activity extends AppCompatActivity {
     TextView turn;
     Board br = new Board();
     Game game = new Game();
-    Board copy = new Board();
+    Board copy;
+    String spec = "";
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        //Board copy;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chess_activity);
         ImageAdapter im = new ImageAdapter(this);
@@ -80,7 +86,8 @@ public class Chess_Activity extends AppCompatActivity {
                         }
                         else if(check){
                             Log.i(TAG,"Check is truee" + " turn: " + whiteTurn);
-                            if(game.friendCheck(br,coordinate,whiteTurn).equals("enemyCheck")){
+                            copy = new Board(br);
+                            if(game.friendCheck(copy,coordinate,whiteTurn).equals("friendCheck")){
                                 Log.i(TAG,"Friendcheck stilll there");
                                 Toast.makeText(Chess_Activity.this, convertBoolean(whiteTurn) + " is still in Check!",
                                         Toast.LENGTH_SHORT).show();
@@ -92,16 +99,26 @@ public class Chess_Activity extends AppCompatActivity {
                         }
 
                         if(!check && !checkMate){
-                            copy = copyBoard(br);
-                            if(game.friendCheck(copy,coordinate,whiteTurn).equals("enemyCheck")) {
+                            copy = new Board(br);
+                            if(game.friendCheck(copy,coordinate,whiteTurn).equals("friendCheck")) {
                                 Log.i(TAG, "Friendly check in there");
                                 Toast.makeText(Chess_Activity.this, convertBoolean(whiteTurn) + " Kinng is in check fool!!",
                                         Toast.LENGTH_SHORT).show();
                                 moving = false;
                             }
                             else {
-                                moving = game.move(br, coordinate, whiteTurn);
+                                copy = new Board(br);
+                                moving = game.move(copy,coordinate,whiteTurn, "");
+                                if(game.moveDetails.equals("KP")||game.moveDetails.equals("Pro")){
+
+                                }
+
+
+                                moving = game.move(br, coordinate, whiteTurn,spec);
                                 moveDetails = game.moveDetails;
+                                if(moveDetails.equals("KP")||moveDetails.equals("Pro")){
+
+                                }
                             }
                         }
 
@@ -111,15 +128,15 @@ public class Chess_Activity extends AppCompatActivity {
 
                         }
                         else {
-
-                            if (game.checkMate(br, whiteTurn) == true) {
+                            copy = new Board(br);
+                            if (game.checkMate(copy, whiteTurn) == true) {
                                 Toast.makeText(Chess_Activity.this, convertBoolean(changeTurn(whiteTurn)) + " is in CheckMate!",
                                         Toast.LENGTH_SHORT).show();
                                 checkMate = true;
                                 ImageAdapter.update(br,fir, secondSelectedPosition, moveDetails);
                                 whiteTurn=changeTurn(whiteTurn);
                             }
-                            else if(game.friendCheck(br,coordinate,changeTurn(whiteTurn)).equals("enemyCheck")){
+                            else if(game.friendCheck(copy,coordinate,changeTurn(whiteTurn)).equals("friendCheck")){
                                 Log.i(TAG,"Friendly check in there");
                                 Toast.makeText(Chess_Activity.this, convertBoolean(whiteTurn) + " Kinng is in check fool!!",
                                         Toast.LENGTH_SHORT).show();
@@ -153,22 +170,26 @@ public class Chess_Activity extends AppCompatActivity {
         });
 
     }
-    public Board copyBoard(Board br){
-        Board copy = new Board();
-        int i,j;
-        for(i =0;i<8;i++){
-            for(j = 0;j<8;j++){
-                copy.board[i][j] = br.board[i][j];
-            }
-        }
 
-        for(i = 0;i<16;i++){
-            copy.Black[i] = br.Black[i];
-            copy.White[i] = br.White[i];
+    /*public String onMenuItemClick(MenuItem item) {
+        String choice = "";
+        switch (item.getItemId()) {
+            case R.id.item_comedy:
+                Toast.makeText(this, "Comedy Clicked", Toast.LENGTH_SHORT).show();
+                choice = "Comedy";
+                //return true;
+            case R.id.item_movies:
+                Toast.makeText(this, "Movies Clicked", Toast.LENGTH_SHORT).show();
+                choice = "Movies";
+                //return true;
+            case R.id.item_music:
+                Toast.makeText(this, "Music Clicked", Toast.LENGTH_SHORT).show();
+                choice = "Music";
+                //return true;
         }
-        return copy;
+        return choice;
     }
-
+*/
 
     public void reset(){
         for(int i = 0; i<64;i++) {

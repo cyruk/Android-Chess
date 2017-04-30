@@ -26,6 +26,13 @@ public class King extends Piece {
         moved = false;
         this.id = id;
     }
+
+    public King(Piece k) {
+        this.color = k.getColor();
+        this.name = k.getName();
+        this.moved = k.getMoved();
+        this.id = k.getId();
+    }
     /**
      * No arg constructor
      */
