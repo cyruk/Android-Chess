@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.graphics.Color;
 import android.widget.PopupMenu;
@@ -25,19 +26,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
-public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
+public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, Serializable {
 
     private static final String TAG = "rahimMessage";
 
     GridView chessGrid;
-    private Button chessR,chessHelp,chessRedo,chessResign,chessDraw;
+    private Button chessR,chessHelp,chessRedo,chessResign,chessDraw,save;
     private  TextView chHelp,chTurn;
 
 
     ImageAdapter im;
     public  boolean whiteTurn= true;
-    int draw = 0;
+    boolean draw = false;
     public int firstSelectedPosition = -1;
     public int fir = -1;
     public int secondSelectedPosition = -1;
@@ -55,13 +57,72 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
     String help = "";
     boolean firstMove = false;
     boolean resign = false;
+    public int counter = 0;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         //Board copy;
+        if (getIntent() != null && getIntent().getExtras() != null)
+        {
+            Intent intent = getIntent();
+            String message = intent.getStringExtra(Replay_Activity.playGame);
+            try {
+                br = readApp(message);
+                whiteTurn = br.getTurn();
+                checkMate = br.getCheckMate();
+                resign = br.getResign();
+                check = br.getCheck();
+                firstMove = br.getFirstMove();
+                draw = br.getDraw();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chess_activity);
+        save = (Button) findViewById(R.id.save);
+        save.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                if(br.getSaved()==true){
+                    try {
+                        writeApp2(br, br.getName().toString());
+                        Toast.makeText(Chess_Activity.this, "File saved as: " + br.getName() ,
+                                Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setTitle("Save");
+                final EditText input = new EditText(view.getContext());
+                builder.setView(input);
+                builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        br.setSaved(true,input.getText().toString());
+                        try {
+                            writeApp2(br, input.getText().toString());
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
 
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+            }
+            }
+        });
         chessHelp = (Button)findViewById(R.id.chess_help);
         chessRedo = (Button)findViewById(R.id.chess_redo);
         chessResign = (Button)findViewById(R.id.chess_res);
@@ -92,11 +153,12 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(draw==2){
+                if(draw==true){
                     Toast.makeText(Chess_Activity.this, "Game is at a Draw!!!!!",
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
+
                 confirmResignDialog(ImageAdapter.getContext());
             }
         });
@@ -113,7 +175,7 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(draw==2){
+                if(draw==true){
                     Toast.makeText(Chess_Activity.this, "Game is at a Draw!!!!!",
                             Toast.LENGTH_SHORT).show();
                     return;
@@ -140,15 +202,20 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(draw==2){
+                if(draw==true){
                     Toast.makeText(Chess_Activity.this, "Game is at a Draw!!!!!",
                             Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(counter == 0){
+                    counter++;
                     return;
                 }
                 if(redone==false &&firstMove) {
                     br = new Board(redo);
                     whiteTurn= changeTurn(whiteTurn);
                     chTurn.setText(convertBoolean(whiteTurn));
+                    br.setTurn(whiteTurn);
                     ImageAdapter.update(br,fir, secondSelectedPosition, moveDetails);
                     chessGrid.setAdapter(new ImageAdapter(ImageAdapter.getContext()));
                     redone= true;
@@ -168,27 +235,36 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(draw==0){
-                    Toast.makeText(Chess_Activity.this, "" + convertBoolean(whiteTurn) + " wants a Draw!"+ "-> "+ convertBoolean(changeTurn(whiteTurn)) +
-                            " please press Draw button to draw the game...",
-                            Toast.LENGTH_LONG).show();
-                    draw++;
-                    whiteTurn = changeTurn(whiteTurn);
-                    chTurn.setText(""+convertBoolean(whiteTurn));
-                }
-                else if(draw ==1){
-                    Toast.makeText(Chess_Activity.this, "Game is at a Draw!!!!!",
-                            Toast.LENGTH_SHORT).show();
-                    draw++;
-                    return;
-                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setTitle("Draw");
+                builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        draw = true;
+                        br.setDraw(true);
+                        Toast.makeText(Chess_Activity.this, "Draw!!" ,
+                                Toast.LENGTH_SHORT).show();
 
+
+                    }
+                });
+                builder.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
             }
         });
 
         chHelp.setText("");
         chessGrid = (GridView) findViewById(R.id.chessBoard);
-        chessGrid.setAdapter(im);
+
+        ImageAdapter.update(br,fir, secondSelectedPosition, moveDetails);
+        chessGrid.setAdapter(new ImageAdapter(ImageAdapter.getContext()));
+
+        // chessGrid.setAdapter(im);
         chTurn.setText(convertBoolean(whiteTurn));
         chessGrid.getCheckedItemPosition();
         chessGrid.setOnItemClickListener(new AdapterView.OnItemClickListener()  {
@@ -196,7 +272,7 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                                     int position, long id) {
                 //String coordinate = "";
                // String moveDetails = "";
-                if(draw==2){
+                if(draw==true){
                     Toast.makeText(Chess_Activity.this, "Game is at a Draw!!!!!",
                             Toast.LENGTH_SHORT).show();
                     return;
@@ -211,6 +287,7 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
+
                 if(firstSelectedPosition==-1) {
                     firstSelectedPosition=position;
                     chessGrid.setSelector(new ColorDrawable(Color.YELLOW));
@@ -229,9 +306,12 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                     try{
                         if(!whiteTurn&&!firstMove){
                             whiteTurn = changeTurn(whiteTurn);
+                            br.setTurn(whiteTurn);
                             chTurn.setText(""+convertBoolean(whiteTurn));
                             Toast.makeText(Chess_Activity.this, "Awkward..White tried to draw on first move, but white always goes first.. Giving White another chance",
                                     Toast.LENGTH_LONG).show();
+
+//                            br.setDraw();
 
                             return;
                         }
@@ -244,6 +324,7 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                         else if(check){
                             Log.i(TAG,"Check is truee" + " turn: " + whiteTurn);
                             copy = new Board(br);
+
                             if(game.friendCheck(copy,coordinate,whiteTurn).equals("friendCheck")){
                                 Log.i(TAG,"Friendcheck stilll there");
                                 Toast.makeText(Chess_Activity.this, convertBoolean(whiteTurn) + " is still in Check!",
@@ -260,7 +341,7 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                             copy = new Board(br);
                             if(game.friendCheck(copy,coordinate,whiteTurn).equals("friendCheck")) {
                                 Log.i(TAG, "Friendly check in there");
-                                Toast.makeText(Chess_Activity.this, convertBoolean(whiteTurn) + " Kinng is in check fool!!",
+                                Toast.makeText(Chess_Activity.this, convertBoolean(whiteTurn) + " King is in check!",
                                         Toast.LENGTH_SHORT).show();
                                 //chessGrid.setSelector(new ColorDrawable(Color.RED));
                                 moving = false;
@@ -287,10 +368,9 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                                     moving = game.move(br, coordinate, whiteTurn, spec);
                                     moveDetails = game.moveDetails;
                                     firstMove = true;
+                                    br.setFirstMove(true);
                                     redone=false;
-                                    if(draw==1){
-                                        draw--;
-                                    }
+                                    writeApp(br);
                                 //}
                             }
                         }
@@ -316,8 +396,11 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                                 Toast.makeText(Chess_Activity.this, convertBoolean(changeTurn(whiteTurn)) + " is in CheckMate!",
                                         Toast.LENGTH_SHORT).show();
                                 checkMate = true;
+                                br.setCheckMate(true);
                                 ImageAdapter.update(br,fir, secondSelectedPosition, moveDetails);
                                 whiteTurn=changeTurn(whiteTurn);
+                                br.setTurn(whiteTurn);
+                                writeApp(br);
                             }
                             else if(game.friendCheck(copy,coordinate,changeTurn(whiteTurn)).equals("friendCheck")){
                                 //chessGrid.setSelector(new ColorDrawable(Color.RED));
@@ -331,14 +414,20 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                                 Toast.makeText(Chess_Activity.this, convertBoolean(changeTurn(whiteTurn)) + " is in Check!",
                                         Toast.LENGTH_SHORT).show();
                                 check = true;
+                                br.setCheck(true);
                                 whiteTurn=changeTurn(whiteTurn);
+                                br.setTurn(whiteTurn);
+                                writeApp(br);
                                 }
                             else {
 
                                 ImageAdapter.update(br,fir, secondSelectedPosition, moveDetails);
                                 whiteTurn=changeTurn(whiteTurn);
+                                br.setTurn(whiteTurn);
+                                writeApp(br);
                             }
                             resetEpos(br,changeTurn(whiteTurn));
+                            writeApp(br);
                             Log.i(TAG,"turn: " + whiteTurn);
                             br.toString();
                         }
@@ -350,6 +439,11 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                     chTurn.setText(convertBoolean(whiteTurn));
                     chHelp.setText("");
                     firstSelectedPosition=-1;
+                    try {
+                        writeApp(br);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -361,7 +455,7 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         builder
-                .setMessage("Are you sure you want to return?? Data will be lost!")
+                .setMessage("Are you sure you want to return??")
                 .setPositiveButton("Yes",  new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
@@ -385,8 +479,14 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         resign = true;
+                        br.setResign(true);
                         Toast.makeText(Chess_Activity.this, convertBoolean(whiteTurn) + " Resigned!",
                                 Toast.LENGTH_SHORT).show();
+                        try {
+                            writeApp(br);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         return;
 
                     }
@@ -607,25 +707,33 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
     }
 
     public void writeApp(Board boardApp) throws IOException {
-        String FILE_NAME = "test.dat";
+        String FILE_NAME = "autosave.txt";
         FileOutputStream fos = openFileOutput(FILE_NAME,MODE_PRIVATE);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(boardApp);
-        System.out.println("WriteApp has been calledbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
         fos.close();
         oos.close();
     }
 
-    public Board readApp() throws IOException, ClassNotFoundException {
-        String FILE_NAME = "test.dat";
+    public void writeApp2(Board boardApp, String name) throws IOException {
+        String FILE_NAME = name;
+        FileOutputStream fos = openFileOutput(FILE_NAME,MODE_PRIVATE);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(boardApp);
+        fos.close();
+        oos.close();
+    }
+
+    public Board readApp(String fileName) throws IOException, ClassNotFoundException {
+        String FILE_NAME = fileName;
         FileInputStream fis = openFileInput(FILE_NAME);
         ObjectInputStream ois = new ObjectInputStream(fis);
         Board readBoard = (Board)ois.readObject();
-        System.out.println("ReadApp has been called");
         fis.close();
         ois.close();
         return readBoard;
     }
+
 
 
 

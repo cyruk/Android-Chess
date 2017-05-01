@@ -99,18 +99,14 @@
         android:layout_height="wrap_content"
         android:text="@string/draw"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/chess_redo"
-        android:layout_alignEnd="@+id/chess_redo"
-        android:layout_marginRight="34dp"
-        android:layout_marginEnd="34dp" />
+        android:layout_alignLeft="@+id/chess_redo"
+        android:layout_alignStart="@+id/chess_redo" />
 
     <Button
         android:id="@+id/chess_res"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/resign"
-        android:layout_marginLeft="22dp"
-        android:layout_marginStart="22dp"
         android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/chessR"
         android:layout_alignStart="@+id/chessR" />
@@ -155,5 +151,14 @@
         android:layout_alignEnd="@+id/chessR"
         android:layout_alignRight="@+id/chessR"
         android:text="" />
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/chess_help"
+        android:layout_alignStart="@+id/chess_help"
+        android:layout_below="@+id/chess_help"
+        android:text="Save" />
 
 </RelativeLayout>

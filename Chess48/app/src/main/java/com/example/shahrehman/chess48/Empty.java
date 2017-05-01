@@ -1,11 +1,13 @@
 package com.example.shahrehman.chess48;
 
+import java.io.Serializable;
+
 /**
  * The Empty class is inheriting piece and added to the polymorphic 2d array of type Piece as an empty spot
  * @author Shah Rahim, John Chen
  *
  */
-public class Empty extends Piece {
+public class Empty extends Piece implements Serializable {
     public String name;
     
     /**

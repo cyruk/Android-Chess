@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 /**
  * The Board class creates 2d array of type piece which includes all of the game pieces 
@@ -14,10 +15,19 @@ import java.io.ObjectOutputStream;
  * @Black this is the string array that will hold all of black pieces coordinates
  * @White this is the string array that will hold all of white pieces coordinates
  */
-public class Board  {
+public class Board implements Serializable {
     public Piece[][] board = new Piece[9][9];
     String [] Black = new String[16];
     String [] White = new String[16];
+    public boolean draw = false;
+    public boolean checkMate = false;
+    public boolean resign = false;
+    public boolean check = false;
+    public boolean turn;
+    public boolean saved = false;
+    public String name = "";
+    public boolean firstMove = false;
+
     
     /**
      * This is the board construcctor which essentially creates a fresh board for play
@@ -189,6 +199,69 @@ public class Board  {
         }
         return false;
     }
+
+    public void setTurn(boolean turn)
+    {
+        this.turn = turn;
+    }
+
+    public boolean getTurn()
+    {
+        return turn;
+    }
+    public void setDraw(boolean draw)
+    {
+        this.draw = draw;
+    }
+    public boolean getDraw()
+    {
+        return draw;
+    }
+    public void setResign(boolean resign)
+    {
+        this.resign = resign;
+    }
+    public boolean getResign(){return resign;}
+    public void setCheckMate(boolean checkMate)
+    {
+        this.checkMate = checkMate;
+    }
+    public boolean getCheckMate()
+    {
+        return checkMate;
+    }
+    public void setCheck(boolean check) {
+        this.check = check;
+    }
+    public boolean getCheck()
+    {
+        return check;
+    }
+
+    public void setSaved(boolean saved, String name)
+    {
+        this.saved = saved;
+        this.name = name;
+    }
+    public boolean getSaved()
+    {
+        return saved;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public void setFirstMove(boolean firstMove)
+    {
+
+        this.firstMove = firstMove;
+    }
+
+    public boolean getFirstMove(){
+        return firstMove;
+    }
+
 
 
 

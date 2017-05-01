@@ -1,13 +1,14 @@
 package com.example.shahrehman.chess48;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * The King class is inheriting piece and added to the polymorphic 2d array of type Piece
  * @author Shah Rahim, John Chen
  *
  */
-public class King extends Piece {
+public class King extends Piece implements Serializable {
     public String color;
     public String name;
     public boolean moved;
