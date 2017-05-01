@@ -34,6 +34,7 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
 
     ImageAdapter im;
     public  boolean whiteTurn= true;
+    int draw = 0;
     public int firstSelectedPosition = -1;
     public int fir = -1;
     public int secondSelectedPosition = -1;
@@ -76,6 +77,11 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
         chessHelp.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                if(draw==2){
+                    Toast.makeText(Chess_Activity.this, "Game is at a Draw!!!!!",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 copy = new Board(br);
                 try {
                     help =game.help(br,whiteTurn," ");
@@ -88,6 +94,11 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
         chessRedo.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                if(draw==2){
+                    Toast.makeText(Chess_Activity.this, "Game is at a Draw!!!!!",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if(redone==false &&firstMove) {
                     br = new Board(redo);
                     whiteTurn= changeTurn(whiteTurn);
@@ -101,6 +112,20 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
         chessDraw.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                if(draw==0){
+                    Toast.makeText(Chess_Activity.this, "" + convertBoolean(whiteTurn) + " wants a Draw!"+ "-> "+ convertBoolean(changeTurn(whiteTurn)) +
+                            " please press Draw button to draw the game...",
+                            Toast.LENGTH_LONG).show();
+                    draw++;
+                    whiteTurn = changeTurn(whiteTurn);
+                    chTurn.setText(""+convertBoolean(whiteTurn));
+                }
+                else if(draw ==1){
+                    Toast.makeText(Chess_Activity.this, "Game is at a Draw!!!!!",
+                            Toast.LENGTH_SHORT).show();
+                    draw++;
+                    return;
+                }
 
             }
         });
@@ -115,6 +140,11 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                                     int position, long id) {
                 //String coordinate = "";
                // String moveDetails = "";
+                if(draw==2){
+                    Toast.makeText(Chess_Activity.this, "Game is at a Draw!!!!!",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if(firstSelectedPosition==-1) {
                     firstSelectedPosition=position;
                     chessGrid.setSelector(new ColorDrawable(Color.YELLOW));
@@ -131,7 +161,14 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                     Log.i(TAG, coordinate);
 
                     try{
+                        if(!whiteTurn&&!firstMove){
+                            whiteTurn = changeTurn(whiteTurn);
+                            chTurn.setText(""+convertBoolean(whiteTurn));
+                            Toast.makeText(Chess_Activity.this, "Awkward..White tried to draw on first move, but white always goes first.. Giving White another chance",
+                                    Toast.LENGTH_SHORT).show();
 
+                            return;
+                        }
                         if(checkMate){
                             Toast.makeText(Chess_Activity.this, "CheckMate! "+ convertBoolean(changeTurn(whiteTurn)) + "Wins" ,
                                     Toast.LENGTH_SHORT).show();
@@ -185,6 +222,9 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                                     moveDetails = game.moveDetails;
                                     firstMove = true;
                                     redone=false;
+                                    if(draw==1){
+                                        draw--;
+                                    }
                                 //}
                             }
                         }
