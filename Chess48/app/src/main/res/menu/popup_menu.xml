@@ -2,13 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/one"
-        android:title="One"/>
+        android:id="@+id/q_ueen"
+        android:title="Queen"/>
     <item
-        android:id="@+id/two"
-        android:title="Two"/>
+        android:id="@+id/r_ook"
+        android:title="Rook"/>
     <item
-        android:id="@+id/three"
-        android:title="Three"/>
+        android:id="@+id/k_night"
+        android:title="Knight"/>
+    <item
+        android:id="@+id/b_ishop"
+        android:title="Bishop"/>
 
 </menu>

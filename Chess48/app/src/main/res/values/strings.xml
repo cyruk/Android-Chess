@@ -6,4 +6,8 @@
     <string name="returnM">Return</string>
     <string name="playG">Play Game</string>
     <string name="choose">Choose Your Piece</string>
+    <string name="redo">Redo</string>
+    <string name="help">Help</string>
+    <string name="draw">Draw</string>
+    <string name="resign">Resign</string>
 </resources>

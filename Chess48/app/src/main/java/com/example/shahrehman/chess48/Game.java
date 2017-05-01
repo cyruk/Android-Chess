@@ -64,7 +64,7 @@ public class Game {
                 br = Kill(br, row1,col1,row2,col2,tmp,color);
             }
             else if (moveDetails.equals("KP") || moveDetails.equals("Pro")){
-                br = promotion(br, row1,col1,row2,col2,moveDetails,color,cr);
+                br = promotion(br, row1,col1,row2,col2,moveDetails,color,cr,pro);
             }
         }
         else if (br.board[row1][col1].getClass().isInstance(new Rook())) {
@@ -118,99 +118,172 @@ public class Game {
         return true;
     }
 
-    public boolean iValid(Board br, String cr, boolean whiteTurn) throws IOException{
-		int[] cor;
-		int row1, col1, row2, col2;
-		cor = convert(cr);
-		Piece[] tmp = new Piece[1];
-		row1 = cor[0];
-		col1 = cor[1];
-		row2 = cor[2];
-		col2 = cor[3];
-		Board copy = copyBoard(br);
-		if(row1==row2 && col1 ==col2){
-			return false;
-		}
-		else if (br.board[row1][col1].getClass().isInstance(new Empty())){
-			return false;
-		}
-		String color = br.board[row1][col1].getColor();
-		if ((whiteTurn == true && color.equals("Black"))||(whiteTurn == false && color.equals("White"))){
-			return false;
-		}
-		moveDetails = copy.board[row1][col1].isValid(row1, col1, row2, col2, br);
-		if (moveDetails.equals("No")){
-			return false;
-		}
-		if (br.board[row1][col1].getClass().isInstance(new Pawn())) {
-			if (moveDetails.equals("FreeMove")) {
-				copy = freeMove(copy, row1, col1, row2, col2, tmp, color);
-			}
-			else if(moveDetails.equals("setEpos")){
-				copy = freeMove(copy, row1, col1, row2, col2, tmp, color);
-				copy.board[row2][col2].ePos = true;
-			}
-			else if (moveDetails.equals("Epos")){
-				Epos(copy,row1,col1,row2,col2,color,tmp);
-			}
-			else if (moveDetails.equals("Kill")) {
-				copy = Kill(copy, row1,col1,row2,col2,tmp,color);
-			}
-			else if (moveDetails.equals("KP") || moveDetails.equals("Pro")){
-				copy = promotion(copy, row1,col1,row2,col2,moveDetails,color,cr);
-			}
-		}
-		else if (br.board[row1][col1].getClass().isInstance(new Rook())) {
-			if (moveDetails.equals("FreeMove")) {
-				copy = freeMove(copy, row1, col1, row2, col2, tmp, color);
-				copy.board[row2][col2].moved = true;
-			}
-			else if (moveDetails.equals("Kill")) {
-				copy = Kill(copy, row1,col1,row2,col2,tmp,color);
-				copy.board[row2][col2].moved = true;
-			}
-		}
-		else if (br.board[row1][col1].getClass().isInstance(new Bishop())) {
-			if (moveDetails.equals("FreeMove")) {
-				copy = freeMove(copy, row1, col1, row2, col2, tmp, color);
-			}
-			else if (moveDetails.equals("Kill")) {
-				copy = Kill(copy, row1,col1,row2,col2,tmp,color);
-			}
-		}
-		else if (br.board[row1][col1].getClass().isInstance(new Knight())) {
-			if (moveDetails.equals("FreeMove")) {
-				copy = freeMove(copy, row1, col1, row2, col2, tmp, color);
-			}
-			else if (moveDetails.equals("Kill")) {
-				copy = Kill(copy, row1,col1,row2,col2,tmp,color);
-			}
-		}
-		else if (br.board[row1][col1].getClass().isInstance(new Queen())) {
-			if (moveDetails.equals("FreeMove")) {
-				copy = freeMove(copy, row1, col1, row2, col2, tmp, color);
-			}
-			else if (moveDetails.equals("Kill")) {
-				copy = Kill(copy, row1,col1,row2,col2,tmp,color);
-			}
-		}
-		else if (br.board[row1][col1].getClass().isInstance(new King())) {
-			if (moveDetails.equals("FreeMove")) {
-				copy = freeMove(copy, row1, col1, row2, col2, tmp, color);
-				copy.board[row2][col2].moved= true;
-			}
-			else if (moveDetails.equals("Kill")) {
-				copy = Kill(copy, row1,col1,row2,col2,tmp,color);
-				copy.board[row2][col2].moved= true;
-			}
-			else if (moveDetails.equals("lc") ||moveDetails.equals("rc")) {
-				castling(copy,row1,col1,row2,col2,moveDetails,color,tmp);
-			}
-		}
-		return true;
-	}
+    public String help(Board br, boolean whiteTurn) throws IOException{
+        //boolean loop= true;
+        int i;
+        int[] cor = new int[2];
+        String[] moves = new String[16];
+        String moveDe = "";
+        if(whiteTurn==true){
+            for(i=0;i<16;i++) {
+                if (!br.White[i].isEmpty()) {
 
-    /**
+                    cor = getCoordinate(br.White[i]);
+                    if (i < 8) {
+                        for (int y = 0; y < 8; y++) {
+                            for (int x = 0; x < 8; x++) {
+                                moveDe = new Pawn().isValid(cor[0], cor[1], y, x, br);
+                                if (moveDe.equals("No")) {
+                                    continue;
+                                } else {
+                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                }
+                            }
+                        }
+                    } else if (i == 8 || i == 9) {
+                        for (int y = 0; y < 8; y++) {
+                            for (int x = 0; x < 8; x++) {
+                                moveDe = new Rook().isValid(cor[0], cor[1], y, x, br);
+                                if (moveDe.equals("No")) {
+                                    continue;
+                                } else {
+                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                }
+                            }
+                        }
+                    } else if (i == 10 || i == 11) {
+                        for (int y = 0; y < 8; y++) {
+                            for (int x = 0; x < 8; x++) {
+                                moveDe = new Knight().isValid(cor[0], cor[1], y, x, br);
+                                if (moveDe.equals("No")) {
+                                    continue;
+                                } else {
+                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                }
+                            }
+                        }
+                    } else if (i == 12 || i == 13) {
+                        for (int y = 0; y < 8; y++) {
+                            for (int x = 0; x < 8; x++) {
+                                moveDe = new Bishop().isValid(cor[0], cor[1], y, x, br);
+                                if (moveDe.equals("No")) {
+                                    continue;
+                                } else {
+                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                }
+                            }
+                        }
+                    } else if (i == 14) {
+                        for (int y = 0; y < 8; y++) {
+                            for (int x = 0; x < 8; x++) {
+                                moveDe = new Queen().isValid(cor[0], cor[1], y, x, br);
+                                if (moveDe.equals("No")) {
+                                    continue;
+                                } else {
+                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                }
+                            }
+                        }
+                    } else if (i == 15) {
+                        for (int y = 0; y < 8; y++) {
+                            for (int x = 0; x < 8; x++) {
+                                moveDe = new Bishop().isValid(cor[0], cor[1], y, x, br);
+                                if (moveDe.equals("No")) {
+                                    continue;
+                                } else {
+                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if(i>15){
+                return "No Help";
+            }
+        }
+        else if(whiteTurn==false) {
+            for (i = 0; i < 16; i++) {
+                if (!br.Black[i].isEmpty()) {
+
+                    cor = getCoordinate(br.Black[i]);
+                    if (i < 8) {
+                        for (int y = 0; y < 8; y++) {
+                            for (int x = 0; x < 8; x++) {
+                                moveDe = new Pawn().isValid(cor[0], cor[1], y, x, br);
+                                if (moveDe.equals("No")) {
+                                    continue;
+                                } else {
+                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                }
+                            }
+                        }
+                    } else if (i == 8 || i == 9) {
+                        for (int y = 0; y < 8; y++) {
+                            for (int x = 0; x < 8; x++) {
+                                moveDe = new Rook().isValid(cor[0], cor[1], y, x, br);
+                                if (moveDe.equals("No")) {
+                                    continue;
+                                } else {
+                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                }
+                            }
+                        }
+                    } else if (i == 10 || i == 11) {
+                        for (int y = 0; y < 8; y++) {
+                            for (int x = 0; x < 8; x++) {
+                                moveDe = new Knight().isValid(cor[0], cor[1], y, x, br);
+                                if (moveDe.equals("No")) {
+                                    continue;
+                                } else {
+                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                }
+                            }
+                        }
+                    } else if (i == 12 || i == 13) {
+                        for (int y = 0; y < 8; y++) {
+                            for (int x = 0; x < 8; x++) {
+                                moveDe = new Bishop().isValid(cor[0], cor[1], y, x, br);
+                                if (moveDe.equals("No")) {
+                                    continue;
+                                } else {
+                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                }
+                            }
+                        }
+                    } else if (i == 14) {
+                        for (int y = 0; y < 8; y++) {
+                            for (int x = 0; x < 8; x++) {
+                                moveDe = new Queen().isValid(cor[0], cor[1], y, x, br);
+                                if (moveDe.equals("No")) {
+                                    continue;
+                                } else {
+                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                }
+                            }
+                        }
+                    } else if (i == 15) {
+                        for (int y = 0; y < 8; y++) {
+                            for (int x = 0; x < 8; x++) {
+                                moveDe = new Bishop().isValid(cor[0], cor[1], y, x, br);
+                                if (moveDe.equals("No")) {
+                                    continue;
+                                } else {
+                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if(i>15){
+                return "No Help";
+            }
+        }
+        return "No Help";
+    }
+
+     /**
      * This method checks if the king is in checkmate
      * @param br the board to be examined
      * @param turn which piece just went
@@ -790,40 +863,7 @@ public class Game {
     	return "notInFriendlyCheck";
     }
 
-	public String friendlyTestCheck(Board br, String cdt, boolean whiteTurn) throws IOException {
-		Board copy = copyBoard(br);
-		String testCdt = "";
-		boolean result;
-		result = iValid(copy, cdt, whiteTurn);
-		if (result == false){
-			return "invalid";
-		}
-		else{
-			if(whiteTurn ==true){
-				for(int i = 0;i <copy.Black.length;i++){
-					testCdt = convertBack(copy.Black[i]) + " " +convertBack(copy.White[15]);
-					if( convertBack(copy.Black[i]).isEmpty() ||convertBack(copy.White[15]).isEmpty()){
-						continue;
-					}
-					else if(move(copy,testCdt,false,"")==true){
-						return "inFriendlyCheck";
-					}
-				}
-			}
-			else if(whiteTurn==false){
-				for(int i = 0;i <copy.White.length;i++){
-					testCdt = convertBack(copy.White[i]) + " " +  convertBack(copy.Black[15]);
-					if( convertBack(copy.White[i]).isEmpty() ||convertBack(copy.Black[15]).isEmpty()){
-						continue;
-					}
-					else if(move(copy,testCdt,true,"")==true){
-						return "inFriendlyCheck";
-					}
-				}
-			}
-		}
-		return "notInFriendlyCheck";
-	}
+
     
     /**
      * This method checks all pieces if they have enemy king in check
@@ -889,7 +929,7 @@ public class Game {
 				if( convertBack(copy.Black[i]).isEmpty() ||convertBack(copy.White[15]).isEmpty()){
 					continue;
 				}
-				else if(iValid(copy,testCdt,false)==true){
+				else if(move(copy,testCdt,false,"")==true){
 					return "friendCheck";
 				}
 			}
@@ -960,71 +1000,74 @@ public class Game {
      * @param userInput the users input during promotion
      * @return returns board object after promoting a pawn
      */
-    public Board promotion(Board br, int row1, int col1, int row2, int col2, String moveDetails, String color, String userInput){
+    public Board promotion(Board br, int row1, int col1, int row2, int col2, String moveDetails, String color, String userInput,String pro){
         int pawnID = br.board[row1][col1].getId();
         char colorPiece = color.toLowerCase().charAt(0);
         char promo;
         if (moveDetails.equals("KP")){
             String killedColor = br.board[row2][col2].getColor();
             int killedID = br.board[row2][col2].getId();
-            if (userInput.length() < 7){
+            if (pro.equals("Queen")){
                 br = changePosition(br, killedColor, killedID, -1, -1);
                 br.board[row2][col2] = new Queen(color, colorPiece + "Q" , pawnID);
                 br.board[row1][col1] = new Empty("##");
                 br = changePosition(br, color, pawnID, row2, col2);
             }
             else{
-                promo = userInput.toUpperCase().charAt(6);
-                if (promo == 'N'){
+                //promo = userInput.toUpperCase().charAt(6);
+                if (pro.equals("Knight")){
                     br.board[row2][col2] = new Knight(color, colorPiece + "N", pawnID);
                     br.board[row1][col1] = new Empty("##");
                     br = changePosition(br, color, pawnID, row2, col2);
                 }
-                else if (promo == 'B'){
+                else if (pro.equals("Bishop")){
                     br.board[row2][col2] = new Bishop(color, colorPiece + "B", pawnID);
                     br.board[row1][col1] = new Empty("##");
                     br = changePosition(br, color, pawnID, row2, col2);
                 }
-                else if (promo == 'R'){
+                else if (pro.equals("Rook")){
                     br.board[row2][col2] = new Rook(color, colorPiece + "R", pawnID);
                     br.board[row1][col1] = new Empty("##");
                     br = changePosition(br, color, pawnID, row2, col2);
                 }
-                else if (promo == 'Q'){
-                    br.board[row2][col2] = new Queen(color, colorPiece + "Q", pawnID);
-                    br.board[row1][col1] = new Empty("##");
-                    br = changePosition(br, color, pawnID, row2, col2);
-                }
+                else{
+					br = changePosition(br, killedColor, killedID, -1, -1);
+					br.board[row2][col2] = new Queen(color, colorPiece + "Q" , pawnID);
+					br.board[row1][col1] = new Empty("##");
+					br = changePosition(br, color, pawnID, row2, col2);
+				}
+
             }
         }
         else if (moveDetails.equals("Pro")){
-            if (userInput.length() < 7){
+            if (pro.equals("Queen")){
                 br.board[row2][col2] = new Queen(color, colorPiece + "Q" , pawnID);
                 br.board[row1][col1] = new Empty("##");
                 br = changePosition(br, color, pawnID, row2, col2);
             }
             else{
                 promo = userInput.toUpperCase().charAt(6);
-                if (promo == 'N'){
+                if (pro.equals("Knight")){
                     br.board[row2][col2] = new Knight(color, colorPiece + "N", pawnID);
                     br.board[row1][col1] = new Empty("##");
                     br = changePosition(br, color, pawnID, row2, col2);
                 }
-                else if (promo == 'B'){
+                else if (pro.equals("Bishop")){
                     br.board[row2][col2] = new Bishop(color, colorPiece + "B", pawnID);
                     br.board[row1][col1] = new Empty("##");
                     br = changePosition(br, color, pawnID, row2, col2);
                 }
-                else if (promo == 'R'){
+                else if (pro.equals("Rook")){
                     br.board[row2][col2] = new Rook(color, colorPiece + "R", pawnID);
                     br.board[row1][col1] = new Empty("##");
                     br = changePosition(br, color, pawnID, row2, col2);
                 }
-                else if (promo == 'Q'){
-                    br.board[row2][col2] = new Queen(color, colorPiece + "Q", pawnID);
-                    br.board[row1][col1] = new Empty("##");
-                    br = changePosition(br, color, pawnID, row2, col2);
-                }
+                else{
+					br.board[row2][col2] = new Queen(color, colorPiece + "Q" , pawnID);
+					br.board[row1][col1] = new Empty("##");
+					br = changePosition(br, color, pawnID, row2, col2);
+				}
+
             }
         }
         return br;

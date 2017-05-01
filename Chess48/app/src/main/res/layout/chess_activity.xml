@@ -9,25 +9,151 @@
 
     <GridView
         android:id="@+id/chessBoard"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
         android:adjustViewBounds="true"
         android:gravity="center_horizontal"
         android:numColumns="8"
         android:padding="0dp"
-        android:verticalSpacing="0dp"
-        android:layout_centerVertical="true"
+        android:verticalSpacing="0dp">
+        android:listSelector="@drawable/grid_sel"
+        android:scrollbars="none" /></GridView>
+
+    <TableLayout
+        android:layout_width="400dp"
+        android:layout_height="200dp"
+        android:id="@+id/tableLayout"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
-        android:listSelector="@drawable/grid_sel"
-        android:scrollbars="none" />
-    </GridView>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+        </TableRow>
+    </TableLayout>
 
     <Button
         android:id="@+id/chessR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/chess_res"
+        android:layout_marginEnd="22dp"
+        android:layout_marginRight="22dp"
+        android:layout_toLeftOf="@+id/chess_help"
+        android:layout_toStartOf="@+id/chess_help"
         android:text="@string/returnM" />
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/ch_help"
+        android:layout_toRightOf="@+id/ch_help"
+        android:id="@+id/tableRow">
+
+    </TableRow>
+
+    <Button
+        android:id="@+id/chess_redo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/redo"
+        android:layout_alignBaseline="@+id/chess_help"
+        android:layout_alignBottom="@+id/chess_help"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="27dp"
+        android:layout_marginEnd="27dp" />
+
+    <Button
+        android:id="@+id/chess_help"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/help"
+        android:layout_above="@+id/chess_draw"
+        android:layout_toLeftOf="@+id/chess_redo"
+        android:layout_toStartOf="@+id/chess_redo"
+        android:layout_marginRight="22dp"
+        android:layout_marginEnd="22dp" />
+
+    <Button
+        android:id="@+id/chess_draw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/draw"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/chess_redo"
+        android:layout_alignEnd="@+id/chess_redo"
+        android:layout_marginRight="34dp"
+        android:layout_marginEnd="34dp" />
+
+    <Button
+        android:id="@+id/chess_res"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/resign"
+        android:layout_marginLeft="22dp"
+        android:layout_marginStart="22dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/chessR"
+        android:layout_alignStart="@+id/chessR" />
+
+    <TextView
+        android:id="@+id/help"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/chess_help"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:text="Help: "
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/turn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/help"
+        android:layout_alignEnd="@+id/help"
+        android:layout_alignRight="@+id/help"
+        android:layout_marginBottom="12dp"
+        android:text="Turn: "
+        android:textSize="20dp"
+        android:layout_toRightOf="@+id/tableRow"
+        android:layout_toEndOf="@+id/tableRow" />
+
+    <TextView
+        android:id="@+id/ch_turn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/turn"
+        android:layout_alignEnd="@+id/chessR"
+        android:layout_alignRight="@+id/chessR"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/ch_hel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/chessR"
+        android:layout_alignEnd="@+id/chessR"
+        android:layout_alignRight="@+id/chessR"
+        android:text="" />
 
 </RelativeLayout>

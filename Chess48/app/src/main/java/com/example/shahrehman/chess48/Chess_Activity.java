@@ -23,12 +23,16 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-public class Chess_Activity extends AppCompatActivity {
+public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
 
     private static final String TAG = "rahimMessage";
+
     GridView chessGrid;
-/*9999999999999999999999999999999999999999*/
-    private Button chessR;
+    private Button chessR,chessHelp,chessRedo,chessResign,chessDraw;
+    private  TextView chHelp,chTurn;
+
+
+    ImageAdapter im;
     public  boolean whiteTurn= true;
     public int firstSelectedPosition = -1;
     public int fir = -1;
@@ -36,17 +40,31 @@ public class Chess_Activity extends AppCompatActivity {
     public boolean checkMate=false;
     public boolean check = false;
     public boolean moving;
-    TextView turn;
+    Boolean redone = false;
+    Board redo;
     Board br = new Board();
     Game game = new Game();
     Board copy;
     String spec = "";
+    String coordinate = "";
+    String moveDetails = "";
+    String help = "";
+    boolean firstMove = false;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         //Board copy;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chess_activity);
-        ImageAdapter im = new ImageAdapter(this);
+
+        chessHelp = (Button)findViewById(R.id.chess_help);
+        chessRedo = (Button)findViewById(R.id.chess_redo);
+        chessResign = (Button)findViewById(R.id.chess_res);
+        chessDraw = (Button)findViewById(R.id.chess_draw);
+        chHelp = (TextView)findViewById(R.id.ch_hel);
+        chTurn = (TextView)findViewById(R.id.ch_turn);
+
+        im = new ImageAdapter(this);
         chessR = (Button) findViewById(R.id.chessR);
         chessR.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -55,15 +73,42 @@ public class Chess_Activity extends AppCompatActivity {
                 launchMain();
             }
         });
+        chessHelp.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                copy = new Board(br);
+                try {
+                    help =game.help(br,whiteTurn);
+                    chHelp.setText(help);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        chessRedo.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                if(redone==false &&firstMove) {
+                    br = new Board(redo);
+                    whiteTurn= changeTurn(whiteTurn);
+                    chTurn.setText(convertBoolean(whiteTurn));
+                    ImageAdapter.update(br,fir, secondSelectedPosition, moveDetails);
+                    chessGrid.setAdapter(new ImageAdapter(ImageAdapter.getContext()));
+                    redone= true;
+                }
+            }
+        });
 
+        chHelp.setText("");
         chessGrid = (GridView) findViewById(R.id.chessBoard);
         chessGrid.setAdapter(im);
+        chTurn.setText(convertBoolean(whiteTurn));
         chessGrid.getCheckedItemPosition();
         chessGrid.setOnItemClickListener(new AdapterView.OnItemClickListener()  {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                String coordinate = "";
-                String moveDetails = "";
+                //String coordinate = "";
+               // String moveDetails = "";
                 if(firstSelectedPosition==-1) {
                     firstSelectedPosition=position;
                     chessGrid.setSelector(new ColorDrawable(Color.YELLOW));
@@ -73,11 +118,14 @@ public class Chess_Activity extends AppCompatActivity {
                 else{
                     secondSelectedPosition = position;
                     chessGrid.setSelector(new ColorDrawable(Color.YELLOW));
+                    //chessGrid.setSelection(8);
+                    //chessGrid.setSelector(new ColorDrawable(Color.RED));
                     fir=firstSelectedPosition;
                     coordinate = convert(fir) +" " +  convert(secondSelectedPosition);
                     Log.i(TAG, coordinate);
 
                     try{
+
                         if(checkMate){
                             Toast.makeText(Chess_Activity.this, "CheckMate! "+ convertBoolean(changeTurn(whiteTurn)) + "Wins" ,
                                     Toast.LENGTH_SHORT).show();
@@ -99,32 +147,48 @@ public class Chess_Activity extends AppCompatActivity {
                         }
 
                         if(!check && !checkMate){
+
                             copy = new Board(br);
                             if(game.friendCheck(copy,coordinate,whiteTurn).equals("friendCheck")) {
                                 Log.i(TAG, "Friendly check in there");
                                 Toast.makeText(Chess_Activity.this, convertBoolean(whiteTurn) + " Kinng is in check fool!!",
                                         Toast.LENGTH_SHORT).show();
+                                //chessGrid.setSelector(new ColorDrawable(Color.RED));
                                 moving = false;
                             }
                             else {
-                                copy = new Board(br);
-                                moving = game.move(copy,coordinate,whiteTurn, "");
-                                if(game.moveDetails.equals("KP")||game.moveDetails.equals("Pro")){
-
-                                }
-
-
-                                moving = game.move(br, coordinate, whiteTurn,spec);
+                                Log.i(TAG,"Original is");
+                                br.toString();
+                                Log.i(TAG,"***********************************");
+                                Log.i(TAG,"Copy is");
+                                copy.toString();
+                                /*copy = new Board(br);
+                                Log.i(TAG,"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                                moving = game.move(copy,coordinate,whiteTurn, "Rook");
                                 moveDetails = game.moveDetails;
-                                if(moveDetails.equals("KP")||moveDetails.equals("Pro")){
-
+                                Log.i(TAG,moveDetails);
+                                if(moveDetails.equals("KP")|| moveDetails.equals("Pro")){
+                                    //showPopUp(v);
+                                    Log.i(TAG,spec);
+                                    Toast.makeText(Chess_Activity.this, spec,
+                                            Toast.LENGTH_SHORT).show();
                                 }
+                                //else {//Log.i(TAG,spec);*/
+                                    redo = new Board(br);
+                                    moving = game.move(br, coordinate, whiteTurn, spec);
+                                    moveDetails = game.moveDetails;
+                                    firstMove = true;
+                                    redone=false;
+                                //}
                             }
                         }
 
                         if(moving!=true) {
+                            if(secondSelectedPosition!=-1)
+                                //chessGrid.setSelector(new ColorDrawable(Color.RED));
                             Toast.makeText(Chess_Activity.this, "Move is invalid",
                                     Toast.LENGTH_SHORT).show();
+
 
                         }
                         else {
@@ -137,6 +201,7 @@ public class Chess_Activity extends AppCompatActivity {
                                 whiteTurn=changeTurn(whiteTurn);
                             }
                             else if(game.friendCheck(copy,coordinate,changeTurn(whiteTurn)).equals("friendCheck")){
+                                //chessGrid.setSelector(new ColorDrawable(Color.RED));
                                 Log.i(TAG,"Friendly check in there");
                                 Toast.makeText(Chess_Activity.this, convertBoolean(whiteTurn) + " Kinng is in check fool!!",
                                         Toast.LENGTH_SHORT).show();
@@ -163,6 +228,8 @@ public class Chess_Activity extends AppCompatActivity {
                     }
                     catch (IOException e){}
                     chessGrid.setAdapter(new ImageAdapter(ImageAdapter.getContext()));
+                    chTurn.setText(convertBoolean(whiteTurn));
+                    chHelp.setText("");
                     firstSelectedPosition=-1;
                 }
             }
@@ -171,25 +238,32 @@ public class Chess_Activity extends AppCompatActivity {
 
     }
 
-    /*public String onMenuItemClick(MenuItem item) {
-        String choice = "";
-        switch (item.getItemId()) {
-            case R.id.item_comedy:
-                Toast.makeText(this, "Comedy Clicked", Toast.LENGTH_SHORT).show();
-                choice = "Comedy";
-                //return true;
-            case R.id.item_movies:
-                Toast.makeText(this, "Movies Clicked", Toast.LENGTH_SHORT).show();
-                choice = "Movies";
-                //return true;
-            case R.id.item_music:
-                Toast.makeText(this, "Music Clicked", Toast.LENGTH_SHORT).show();
-                choice = "Music";
-                //return true;
+    public boolean onMenuItemClick(MenuItem item) {
+
+        if(item.getItemId()==R.id.b_ishop){
+            spec = "Bishop";
         }
-        return choice;
+        else if(item.getItemId()==R.id.q_ueen){
+            spec = "Queen";
+        }
+        else if(item.getItemId()==R.id.k_night){
+            spec = "Knight";
+        }
+        else if(item.getItemId()==R.id.r_ook){
+            spec = "Rook";
+        }
+        Log.i(TAG,"FINAL COPY IS");
+        copy.toString();
+        return true;
     }
-*/
+
+    public void showPopUp(View v){
+        PopupMenu popup = new PopupMenu(this,v);
+        popup.setOnMenuItemClickListener(Chess_Activity.this);
+        MenuInflater inflator = popup.getMenuInflater();
+        inflator.inflate(R.menu.popup_menu,popup.getMenu());
+        popup.show();
+    }
 
     public void reset(){
         for(int i = 0; i<64;i++) {
