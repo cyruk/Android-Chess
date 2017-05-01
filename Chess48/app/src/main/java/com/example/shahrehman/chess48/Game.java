@@ -118,10 +118,11 @@ public class Game {
         return true;
     }
 
-    public String help(Board br, boolean whiteTurn) throws IOException{
+    public String help(Board br, boolean whiteTurn,String crd) throws IOException{
         //boolean loop= true;
         int i;
         int[] cor = new int[2];
+        Board copy;
         String[] moves = new String[16];
         String moveDe = "";
         if(whiteTurn==true){
@@ -136,7 +137,11 @@ public class Game {
                                 if (moveDe.equals("No")) {
                                     continue;
                                 } else {
-                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                    copy = new Board(br);
+                                    if(friendCheck(copy,convertBack("" + cor[0] + cor[1]) + " " + convertBack("" + y + x),whiteTurn).equals("friendCheck"))
+                                        continue;
+                                    else
+                                        return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
                                 }
                             }
                         }
@@ -147,7 +152,11 @@ public class Game {
                                 if (moveDe.equals("No")) {
                                     continue;
                                 } else {
-                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                    copy = new Board(br);
+                                    if(friendCheck(copy,convertBack("" + cor[0] + cor[1]) + " " + convertBack("" + y + x),whiteTurn).equals("friendCheck"))
+                                        continue;
+                                    else
+                                        return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
                                 }
                             }
                         }
@@ -158,7 +167,11 @@ public class Game {
                                 if (moveDe.equals("No")) {
                                     continue;
                                 } else {
-                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                    copy = new Board(br);
+                                    if(friendCheck(copy,convertBack("" + cor[0] + cor[1]) + " " + convertBack("" + y + x),whiteTurn).equals("friendCheck"))
+                                        continue;
+                                    else
+                                        return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
                                 }
                             }
                         }
@@ -169,7 +182,11 @@ public class Game {
                                 if (moveDe.equals("No")) {
                                     continue;
                                 } else {
-                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                    copy = new Board(br);
+                                    if(friendCheck(copy,convertBack("" + cor[0] + cor[1]) + " " + convertBack("" + y + x),whiteTurn).equals("friendCheck"))
+                                        continue;
+                                    else
+                                        return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
                                 }
                             }
                         }
@@ -180,18 +197,26 @@ public class Game {
                                 if (moveDe.equals("No")) {
                                     continue;
                                 } else {
-                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                    copy = new Board(br);
+                                    if(friendCheck(copy,convertBack("" + cor[0] + cor[1]) + " " + convertBack("" + y + x),whiteTurn).equals("friendCheck"))
+                                        continue;
+                                    else
+                                        return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
                                 }
                             }
                         }
                     } else if (i == 15) {
                         for (int y = 0; y < 8; y++) {
                             for (int x = 0; x < 8; x++) {
-                                moveDe = new Bishop().isValid(cor[0], cor[1], y, x, br);
+                                moveDe = new King().isValid(cor[0], cor[1], y, x, br);
                                 if (moveDe.equals("No")) {
                                     continue;
                                 } else {
-                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                    copy = new Board(br);
+                                    if(friendCheck(copy,convertBack("" + cor[0] + cor[1]) + " " + convertBack("" + y + x),whiteTurn).equals("friendCheck"))
+                                        continue;
+                                    else
+                                        return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
                                 }
                             }
                         }
@@ -214,7 +239,11 @@ public class Game {
                                 if (moveDe.equals("No")) {
                                     continue;
                                 } else {
-                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                    copy = new Board(br);
+                                    if(friendCheck(copy,convertBack("" + cor[0] + cor[1]) + " " + convertBack("" + y + x),whiteTurn).equals("friendCheck"))
+                                        continue;
+                                    else
+                                        return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
                                 }
                             }
                         }
@@ -225,7 +254,11 @@ public class Game {
                                 if (moveDe.equals("No")) {
                                     continue;
                                 } else {
-                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                    copy = new Board(br);
+                                    if(friendCheck(copy,convertBack("" + cor[0] + cor[1]) + " " + convertBack("" + y + x),whiteTurn).equals("friendCheck"))
+                                        continue;
+                                    else
+                                        return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
                                 }
                             }
                         }
@@ -236,7 +269,11 @@ public class Game {
                                 if (moveDe.equals("No")) {
                                     continue;
                                 } else {
-                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                    copy = new Board(br);
+                                    if(friendCheck(copy,convertBack("" + cor[0] + cor[1]) + " " + convertBack("" + y + x),whiteTurn).equals("friendCheck"))
+                                        continue;
+                                    else
+                                        return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
                                 }
                             }
                         }
@@ -247,7 +284,11 @@ public class Game {
                                 if (moveDe.equals("No")) {
                                     continue;
                                 } else {
-                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                    copy = new Board(br);
+                                    if(friendCheck(copy,convertBack("" + cor[0] + cor[1]) + " " + convertBack("" + y + x),whiteTurn).equals("friendCheck"))
+                                        continue;
+                                    else
+                                        return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
                                 }
                             }
                         }
@@ -258,18 +299,26 @@ public class Game {
                                 if (moveDe.equals("No")) {
                                     continue;
                                 } else {
-                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                    copy = new Board(br);
+                                    if(friendCheck(copy,convertBack("" + cor[0] + cor[1]) + " " + convertBack("" + y + x),whiteTurn).equals("friendCheck"))
+                                        continue;
+                                    else
+                                        return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
                                 }
                             }
                         }
                     } else if (i == 15) {
                         for (int y = 0; y < 8; y++) {
                             for (int x = 0; x < 8; x++) {
-                                moveDe = new Bishop().isValid(cor[0], cor[1], y, x, br);
+                                moveDe = new King().isValid(cor[0], cor[1], y, x, br);
                                 if (moveDe.equals("No")) {
                                     continue;
                                 } else {
-                                    return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
+                                    copy = new Board(br);
+                                    if(friendCheck(copy,convertBack("" + cor[0] + cor[1]) + " " + convertBack("" + y + x),whiteTurn).equals("friendCheck"))
+                                        continue;
+                                    else
+                                        return convertBack("" + cor[0] + cor[1]) + "-->" + convertBack("" + y + x);
                                 }
                             }
                         }

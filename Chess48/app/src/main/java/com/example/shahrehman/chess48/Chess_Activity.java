@@ -78,7 +78,7 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
             public void onClick(View view) {
                 copy = new Board(br);
                 try {
-                    help =game.help(br,whiteTurn);
+                    help =game.help(br,whiteTurn," ");
                     chHelp.setText(help);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -96,6 +96,12 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                     chessGrid.setAdapter(new ImageAdapter(ImageAdapter.getContext()));
                     redone= true;
                 }
+            }
+        });
+        chessDraw.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+
             }
         });
 
@@ -193,7 +199,14 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                         }
                         else {
                             copy = new Board(br);
-                            if (game.checkMate(copy, whiteTurn) == true) {
+                            //String help = game.help(copy,whiteTurn,coordinate);
+                            boolean checkm = game.checkMate(copy, whiteTurn);
+                            copy = new Board(copy);
+                            String help = game.help(copy,changeTurn(whiteTurn),coordinate);
+                            if (checkm == true&&help.equals("No Help")){
+//                                copy = new Board(copy);
+  //                              String help = game.help(copy,changeTurn(whiteTurn),coordinate);
+
                                 Toast.makeText(Chess_Activity.this, convertBoolean(changeTurn(whiteTurn)) + " is in CheckMate!",
                                         Toast.LENGTH_SHORT).show();
                                 checkMate = true;
