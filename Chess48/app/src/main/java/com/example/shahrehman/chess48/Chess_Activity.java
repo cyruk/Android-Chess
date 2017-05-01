@@ -1,7 +1,10 @@
 package com.example.shahrehman.chess48;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,6 +54,7 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
     String moveDetails = "";
     String help = "";
     boolean firstMove = false;
+    boolean resign = false;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -71,12 +75,44 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
             @Override
             public void onClick(View view) {
 
-                launchMain();
+                confirmReturnDialog(ImageAdapter.getContext());
+            }
+        });
+
+        chessResign.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                if(checkMate){
+                    Toast.makeText(Chess_Activity.this, "CheckMate! "+ convertBoolean(changeTurn(whiteTurn)) + "Wins" ,
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(resign){
+                    Toast.makeText(Chess_Activity.this, convertBoolean(whiteTurn) + " Resigned!",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(draw==2){
+                    Toast.makeText(Chess_Activity.this, "Game is at a Draw!!!!!",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                confirmResignDialog(ImageAdapter.getContext());
             }
         });
         chessHelp.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                if(checkMate){
+                    Toast.makeText(Chess_Activity.this, "CheckMate! "+ convertBoolean(changeTurn(whiteTurn)) + "Wins" ,
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(resign){
+                    Toast.makeText(Chess_Activity.this, convertBoolean(whiteTurn) + " Resigned!",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if(draw==2){
                     Toast.makeText(Chess_Activity.this, "Game is at a Draw!!!!!",
                             Toast.LENGTH_SHORT).show();
@@ -94,6 +130,16 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
         chessRedo.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                if(checkMate){
+                    Toast.makeText(Chess_Activity.this, "CheckMate! "+ convertBoolean(changeTurn(whiteTurn)) + "Wins" ,
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(resign){
+                    Toast.makeText(Chess_Activity.this, convertBoolean(whiteTurn) + " Resigned!",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if(draw==2){
                     Toast.makeText(Chess_Activity.this, "Game is at a Draw!!!!!",
                             Toast.LENGTH_SHORT).show();
@@ -112,6 +158,16 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
         chessDraw.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                if(checkMate){
+                    Toast.makeText(Chess_Activity.this, "CheckMate! "+ convertBoolean(changeTurn(whiteTurn)) + "Wins" ,
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(resign){
+                    Toast.makeText(Chess_Activity.this, convertBoolean(whiteTurn) + " Resigned!",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if(draw==0){
                     Toast.makeText(Chess_Activity.this, "" + convertBoolean(whiteTurn) + " wants a Draw!"+ "-> "+ convertBoolean(changeTurn(whiteTurn)) +
                             " please press Draw button to draw the game...",
@@ -145,6 +201,16 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if(checkMate){
+                    Toast.makeText(Chess_Activity.this, "CheckMate! "+ convertBoolean(changeTurn(whiteTurn)) + "Wins" ,
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(resign){
+                    Toast.makeText(Chess_Activity.this, convertBoolean(whiteTurn) + " Resigned!",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if(firstSelectedPosition==-1) {
                     firstSelectedPosition=position;
                     chessGrid.setSelector(new ColorDrawable(Color.YELLOW));
@@ -165,7 +231,7 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                             whiteTurn = changeTurn(whiteTurn);
                             chTurn.setText(""+convertBoolean(whiteTurn));
                             Toast.makeText(Chess_Activity.this, "Awkward..White tried to draw on first move, but white always goes first.. Giving White another chance",
-                                    Toast.LENGTH_SHORT).show();
+                                    Toast.LENGTH_LONG).show();
 
                             return;
                         }
@@ -290,6 +356,50 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
         });
 
     }
+
+    private void confirmReturnDialog(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        builder
+                .setMessage("Are you sure you want to return?? Data will be lost!")
+                .setPositiveButton("Yes",  new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        launchMain();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog,int id) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
+    }
+    private void confirmResignDialog(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        builder
+                .setMessage(convertBoolean(whiteTurn) + " are you sure you want to Resign?")
+                .setPositiveButton("Yes",  new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        resign = true;
+                        Toast.makeText(Chess_Activity.this, convertBoolean(whiteTurn) + " Resigned!",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog,int id) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
+    }
+
 
     public boolean onMenuItemClick(MenuItem item) {
 
