@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 /**
  * The Board class creates 2d array of type piece which includes all of the game pieces 
@@ -14,10 +15,12 @@ import java.io.ObjectOutputStream;
  * @Black this is the string array that will hold all of black pieces coordinates
  * @White this is the string array that will hold all of white pieces coordinates
  */
-public class Board  {
+public class Board implements Serializable{
     public Piece[][] board = new Piece[9][9];
     String [] Black = new String[16];
     String [] White = new String[16];
+    static boolean staticTurn = true;
+    boolean turn;
     
     /**
      * This is the board construcctor which essentially creates a fresh board for play
@@ -88,42 +91,6 @@ public class Board  {
             x++;
         }
     }
-
-    public Board(Board br){
-        System.out.println("Copy");
-
-        int i,j;
-        for(i =0;i<9;i++){
-            for(j=0;j<9;j++){
-                if(br.board[i][j].getClass().isInstance(new Pawn())){
-                    //Pawn p = new Pawn(br);
-                    this.board[i][j] = new Pawn(br.board[i][j]);
-                }
-                else if(br.board[i][j].getClass().isInstance(new Rook())){
-                    this.board[i][j] = new Rook(br.board[i][j]);
-                }
-                else if(br.board[i][j].getClass().isInstance(new Knight())){
-                    this.board[i][j] = new Knight(br.board[i][j]);
-                }
-                else if(br.board[i][j].getClass().isInstance(new Queen())){
-                    this.board[i][j] = new Queen(br.board[i][j]);
-                }
-                else if(br.board[i][j].getClass().isInstance(new Bishop())){
-                    this.board[i][j] = new Bishop(br.board[i][j]);
-                }
-                else if(br.board[i][j].getClass().isInstance(new King())){
-                    this.board[i][j] = new King(br.board[i][j]);
-                }
-                else if(br.board[i][j].getClass().isInstance(new Empty())){
-                    this.board[i][j] = new Empty(br.board[i][j]);
-                }
-            }
-        }
-        for(int x = 0;x<16;x++){
-            this.White[x] = br.White[x];
-            this.Black[x] = br.Black[x];
-        }
-    }
     
     /**
      * The to String method prints out the board during play
@@ -190,6 +157,15 @@ public class Board  {
         return false;
     }
 
+    public void setTurn()
+    {
+        turn = staticTurn;
+    }
+
+    public boolean getTurn()
+    {
+        return turn;
+    }
 
 
 }

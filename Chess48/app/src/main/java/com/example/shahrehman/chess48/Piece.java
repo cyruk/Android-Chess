@@ -1,14 +1,14 @@
 package com.example.shahrehman.chess48;
 
 import java.io.IOException;
-import java.io.PushbackInputStream;
+import java.io.Serializable;
 
 /**
  * The Piece Class is the superclass which will be inherited by the chess game pieces
  * @author Shah Rahim, John Chen
  *
  */
-public class Piece{
+public class Piece implements Serializable {
 	/**
 	 * @color this is the superclass color field used to distinguish black and white pieces
 	 * @epos this is the Empassant field used by pawn for persorming empassant
@@ -41,9 +41,7 @@ public class Piece{
     public String getName(){
         return name;
     }
-
-    //public Piece(Piece p){}
-    public Piece(){}
+    
     /**
      * This method is used to get the color of a piece
      * @return returns a string for the color of a certain piece
@@ -79,9 +77,5 @@ public class Piece{
 
     public boolean getMoved(){
         return moved;
-    }
-
-    public boolean ePos(){
-        return ePos;
     }
 }

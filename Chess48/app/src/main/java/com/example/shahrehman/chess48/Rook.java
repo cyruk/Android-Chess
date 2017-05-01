@@ -1,6 +1,7 @@
 package com.example.shahrehman.chess48;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 
 /**
@@ -8,7 +9,7 @@ import java.io.IOException;
  * @author Shah Rahim, John Chen
  *
  */
-public class Rook extends Piece {
+public class Rook extends Piece implements Serializable{
     public String color;
     public String name;
     public  boolean moved;
@@ -25,13 +26,6 @@ public class Rook extends Piece {
         this.name = name;
         moved = false;
         this.id = id;
-    }
-
-    public Rook(Piece r){
-        this.color = r.getColor();
-        this.name = r.getName();
-        this.moved = r.getMoved();
-        this.id = r.getId();
     }
     /**
      * No arg constructor

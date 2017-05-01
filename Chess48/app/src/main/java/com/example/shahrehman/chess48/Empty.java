@@ -15,9 +15,7 @@ public class Empty extends Piece {
     public Empty(String name){
         this.name = name;
     }
-    public Empty(Piece e){
-        this.name = e.getName();
-    }
+    
     /**
      * The no arg constructor
      */

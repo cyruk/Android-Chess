@@ -4,28 +4,33 @@
     android:background="@color/AliceBlue">
 
     <Button
+        android:id="@+id/sortName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sort By Name"
+        android:layout_below="@+id/listView"
+        android:layout_toLeftOf="@+id/sortDate"
+        android:layout_toStartOf="@+id/sortDate"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp" />
+
+    <Button
         android:id="@+id/return_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/returnM"
-        android:layout_marginLeft="43dp"
-        android:layout_marginStart="43dp"
         android:layout_below="@+id/listView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="14dp" />
+        android:layout_alignLeft="@+id/listView"
+        android:layout_alignStart="@+id/listView" />
 
     <Button
-        android:id="@+id/play_game"
+        android:id="@+id/sortDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/playG"
-        android:layout_marginRight="37dp"
-        android:layout_marginEnd="37dp"
-        android:layout_alignBaseline="@+id/return_main"
-        android:layout_alignBottom="@+id/return_main"
-        android:layout_alignRight="@+id/listView"
-        android:layout_alignEnd="@+id/listView" />
+        android:text="Sort By Date"
+        android:layout_below="@+id/listView"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <ListView
         android:layout_width="350dp"
@@ -33,4 +38,16 @@
         android:id="@+id/listView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/return_main"
+        android:layout_toEndOf="@+id/return_main"
+        android:layout_marginLeft="29dp"
+        android:layout_marginStart="29dp" />
+
 </RelativeLayout>

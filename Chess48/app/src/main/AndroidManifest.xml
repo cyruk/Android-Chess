@@ -19,5 +19,5 @@
         <activity android:name=".Chess_Activity"></activity>
         <activity android:name=".Replay_Activity"></activity>
     </application>
-
+    <uses-sdk android:minSdkVersion="24"/>
 </manifest>

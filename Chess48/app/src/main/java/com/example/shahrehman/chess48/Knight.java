@@ -1,13 +1,14 @@
 package com.example.shahrehman.chess48;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * The Knight class is inheriting piece and added to the polymorphic 2d array of type Piece
  * @author Shah Rahim, John Chen
  *
  */
-public class Knight extends Piece {
+public class Knight extends Piece implements Serializable {
     public String color;
     public String name;
     public int id;
@@ -24,14 +25,7 @@ public class Knight extends Piece {
         this.name = name;
         this.id = id;
     }
-
-    public Knight(Piece kn){
-        this.color = kn.getColor();
-        this.name = kn.getName();
-        this.id = kn.getId();
-    }
-
-
+    
     /**
      * No arg constructor
      */
