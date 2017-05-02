@@ -53,12 +53,10 @@
         android:id="@+id/chessR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/chess_res"
-        android:layout_marginEnd="22dp"
-        android:layout_marginRight="22dp"
-        android:layout_toLeftOf="@+id/chess_help"
-        android:layout_toStartOf="@+id/chess_help"
-        android:text="@string/returnM" />
+        android:text="@string/returnM"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/tableRow"
+        android:layout_toEndOf="@+id/tableRow" />
 
     <TableRow
         android:layout_width="wrap_content"
@@ -99,8 +97,8 @@
         android:layout_height="wrap_content"
         android:text="@string/draw"
         android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/chess_redo"
-        android:layout_alignStart="@+id/chess_redo" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:id="@+id/chess_res"
@@ -108,18 +106,18 @@
         android:layout_height="wrap_content"
         android:text="@string/resign"
         android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/chessR"
-        android:layout_alignStart="@+id/chessR" />
+        android:layout_toLeftOf="@+id/save"
+        android:layout_toStartOf="@+id/save" />
 
     <TextView
         android:id="@+id/help"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/chess_help"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:text="Help: "
-        android:textSize="20dp" />
+        android:textSize="20dp"
+        android:layout_above="@+id/chessR"
+        android:layout_toRightOf="@+id/tableRow"
+        android:layout_toEndOf="@+id/tableRow" />
 
     <TextView
         android:id="@+id/turn"
@@ -156,9 +154,9 @@
         android:id="@+id/save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/chess_help"
-        android:layout_alignStart="@+id/chess_help"
-        android:layout_below="@+id/chess_help"
-        android:text="Save" />
+        android:text="Save"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/chess_draw"
+        android:layout_toStartOf="@+id/chess_draw" />
 
 </RelativeLayout>

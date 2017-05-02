@@ -73,6 +73,10 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                 resign = br.getResign();
                 check = br.getCheck();
                 firstMove = br.getFirstMove();
+                if (!firstMove && resign)
+                {
+                    whiteTurn = changeTurn(whiteTurn);
+                }
                 draw = br.getDraw();
 
             } catch (IOException e) {
@@ -97,30 +101,8 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                     }
                 }
                 else{
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                builder.setTitle("Save");
-                final EditText input = new EditText(view.getContext());
-                builder.setView(input);
-                builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        br.setSaved(true,input.getText().toString());
-                        try {
-                            writeApp2(br, input.getText().toString());
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
-                        }
-
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                builder.show();
-            }
+                    save(view);
+                }
             }
         });
         chessHelp = (Button)findViewById(R.id.chess_help);
@@ -158,7 +140,6 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 confirmResignDialog(ImageAdapter.getContext());
             }
         });
@@ -242,9 +223,9 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                     public void onClick(DialogInterface dialog, int which) {
                         draw = true;
                         br.setDraw(true);
+                        save(findViewById(android.R.id.content));
                         Toast.makeText(Chess_Activity.this, "Draw!!" ,
                                 Toast.LENGTH_SHORT).show();
-
 
                     }
                 });
@@ -255,6 +236,7 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                     }
                 });
                 builder.show();
+
             }
         });
 
@@ -264,14 +246,12 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
         ImageAdapter.update(br,fir, secondSelectedPosition, moveDetails);
         chessGrid.setAdapter(new ImageAdapter(ImageAdapter.getContext()));
 
-        // chessGrid.setAdapter(im);
+
         chTurn.setText(convertBoolean(whiteTurn));
         chessGrid.getCheckedItemPosition();
         chessGrid.setOnItemClickListener(new AdapterView.OnItemClickListener()  {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                //String coordinate = "";
-               // String moveDetails = "";
                 if(draw==true){
                     Toast.makeText(Chess_Activity.this, "Game is at a Draw!!!!!",
                             Toast.LENGTH_SHORT).show();
@@ -297,8 +277,6 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                 else{
                     secondSelectedPosition = position;
                     chessGrid.setSelector(new ColorDrawable(Color.YELLOW));
-                    //chessGrid.setSelection(8);
-                    //chessGrid.setSelector(new ColorDrawable(Color.RED));
                     fir=firstSelectedPosition;
                     coordinate = convert(fir) +" " +  convert(secondSelectedPosition);
                     Log.i(TAG, coordinate);
@@ -310,8 +288,6 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                             chTurn.setText(""+convertBoolean(whiteTurn));
                             Toast.makeText(Chess_Activity.this, "Awkward..White tried to draw on first move, but white always goes first.. Giving White another chance",
                                     Toast.LENGTH_LONG).show();
-
-//                            br.setDraw();
 
                             return;
                         }
@@ -343,7 +319,6 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                                 Log.i(TAG, "Friendly check in there");
                                 Toast.makeText(Chess_Activity.this, convertBoolean(whiteTurn) + " King is in check!",
                                         Toast.LENGTH_SHORT).show();
-                                //chessGrid.setSelector(new ColorDrawable(Color.RED));
                                 moving = false;
                             }
                             else {
@@ -352,18 +327,6 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                                 Log.i(TAG,"***********************************");
                                 Log.i(TAG,"Copy is");
                                 copy.toString();
-                                /*copy = new Board(br);
-                                Log.i(TAG,"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                                moving = game.move(copy,coordinate,whiteTurn, "Rook");
-                                moveDetails = game.moveDetails;
-                                Log.i(TAG,moveDetails);
-                                if(moveDetails.equals("KP")|| moveDetails.equals("Pro")){
-                                    //showPopUp(v);
-                                    Log.i(TAG,spec);
-                                    Toast.makeText(Chess_Activity.this, spec,
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                                //else {//Log.i(TAG,spec);*/
                                     redo = new Board(br);
                                     moving = game.move(br, coordinate, whiteTurn, spec);
                                     moveDetails = game.moveDetails;
@@ -377,7 +340,6 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
 
                         if(moving!=true) {
                             if(secondSelectedPosition!=-1)
-                                //chessGrid.setSelector(new ColorDrawable(Color.RED));
                             Toast.makeText(Chess_Activity.this, "Move is invalid",
                                     Toast.LENGTH_SHORT).show();
 
@@ -390,9 +352,6 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                             copy = new Board(copy);
                             String help = game.help(copy,changeTurn(whiteTurn),coordinate);
                             if (checkm == true&&help.equals("No Help")){
-//                                copy = new Board(copy);
-  //                              String help = game.help(copy,changeTurn(whiteTurn),coordinate);
-
                                 Toast.makeText(Chess_Activity.this, convertBoolean(changeTurn(whiteTurn)) + " is in CheckMate!",
                                         Toast.LENGTH_SHORT).show();
                                 checkMate = true;
@@ -401,13 +360,12 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                                 whiteTurn=changeTurn(whiteTurn);
                                 br.setTurn(whiteTurn);
                                 writeApp(br);
+                                save(findViewById(android.R.id.content));
                             }
                             else if(game.friendCheck(copy,coordinate,changeTurn(whiteTurn)).equals("friendCheck")){
-                                //chessGrid.setSelector(new ColorDrawable(Color.RED));
                                 Log.i(TAG,"Friendly check in there");
                                 Toast.makeText(Chess_Activity.this, convertBoolean(whiteTurn) + " Kinng is in check fool!!",
                                         Toast.LENGTH_SHORT).show();
-
                             }
                             else if (game.enemyCheck(br, whiteTurn).equals("enemyCheck")) {
                                 ImageAdapter.update(br,fir, secondSelectedPosition, "enemyCheck");
@@ -420,7 +378,6 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                                 writeApp(br);
                                 }
                             else {
-
                                 ImageAdapter.update(br,fir, secondSelectedPosition, moveDetails);
                                 whiteTurn=changeTurn(whiteTurn);
                                 br.setTurn(whiteTurn);
@@ -480,6 +437,7 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
                     public void onClick(DialogInterface dialog, int id) {
                         resign = true;
                         br.setResign(true);
+                        save(findViewById(android.R.id.content));
                         Toast.makeText(Chess_Activity.this, convertBoolean(whiteTurn) + " Resigned!",
                                 Toast.LENGTH_SHORT).show();
                         try {
@@ -736,6 +694,32 @@ public class Chess_Activity extends AppCompatActivity implements PopupMenu.OnMen
 
 
 
+    public void save(View view)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        builder.setTitle("Save");
+        final EditText input = new EditText(view.getContext());
+        builder.setView(input);
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                br.setSaved(true,input.getText().toString());
+                try {
+                    writeApp2(br, input.getText().toString());
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
 
 
 }
